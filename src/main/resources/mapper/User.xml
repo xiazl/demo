@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.UserMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.User" >
+       <id column="id" property="id" />
+       <result column="username" property="username"/>
+       <result column="password" property="password"/>
+       <result column="create_time" property="createTime"/>
+   </resultMap>
+
+    <insert id="insert">
+        insert into user(username,password,create_time)
+        values (#{username},#{password},#{salt},#{createTime})
+    </insert>
+
+    <select id="getByUsername" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select id,username,password
+        from user
+        where username = #{username} limit 1
+    </select>
+
+    <select id="getById" resultType="com.fly.caipiao.analysis.entity.User">
+        select id,username,password
+        from user
+		where id = #{id}
+    </select>
+
+</mapper>
