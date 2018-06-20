@@ -18,7 +18,7 @@ public class WebController {
 
     @RequestMapping("/home")
     public String go2Add() {
-        return "pages/index";
+        return "index";
     }
 
     @RequestMapping("/hello")
