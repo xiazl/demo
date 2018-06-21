@@ -40,6 +40,7 @@ public class UserController {
 
     @RequestMapping("/list")
     public Result list(PageBean pageBean) {
+        // jquery datatable服务端分页
         userService.list(pageBean);
         return ResponseData.success();
     }
