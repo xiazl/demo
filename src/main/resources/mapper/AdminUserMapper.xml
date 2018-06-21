@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.AdminUserMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.AdminUser" >
+       <id column="id" property="id" />
+       <result column="username" property="username"/>
+       <result column="password" property="password"/>
+       <result column="cellphone" property="cellphone"/>
+       <result column="status_flag" property="statusFlag"/>
+       <result column="create_time" property="createTime"/>
+   </resultMap>
+
+    <insert id="insert">
+        insert into admin_user(username,password,cellphone,create_time)
+        values (#{username},#{password},#{cellphone},#{createTime})
+    </insert>
+    <update id="update">
+        update admin_user set password=#{password}
+        <if test="cellphone!=null and cellphone.length() > 0">
+            ,cellphone=#{cellphone}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update admin_user set status_flag=1
+        where id = #{id}
+    </update>
+
+    <select id="getByUsername" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select id,username,password
+        from admin_user
+        where username = #{username} and status_flag=0 limit 1
+    </select>
+
+    <select id="getById" resultType="com.fly.caipiao.analysis.entity.AdminUser">
+        select id,username,password
+        from admin_user
+		where id = #{id} and status_flag=0
+    </select>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.AdminUser">
+        select id,username,password,create_time
+        from admin_user
+        where and status_flag=0
+        <if test="username!=null and username.length()" > 0>
+            username like concat('%',#{username},'%')
+        </if>
+    </select>
+
+</mapper>

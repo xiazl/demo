@@ -2,9 +2,6 @@ package com.fly.caipiao.analysis.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.util.HashMap;
 
 /**
  * @author baidu
@@ -16,20 +13,14 @@ import java.util.HashMap;
 @RequestMapping("/web")
 public class WebController {
 
-    @RequestMapping("/home")
+    @RequestMapping("/login")
     public String go2Add() {
+        return "login";
+    }
+
+
+    @RequestMapping("/index")
+    public String test() {
         return "index";
-    }
-
-    @RequestMapping("/hello")
-    public String helloHtml(HashMap<String, Object> map) {
-        map.put("hello", "欢迎进入HTML页面");
-        return "pages/index";
-    }
-
-    @RequestMapping("/test")
-    public ModelAndView test(ModelAndView mv) {
-        mv.setViewName("home");
-        return mv;
     }
 }

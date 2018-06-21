@@ -1,27 +1,27 @@
 package com.fly.caipiao.analysis.entity;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author baidu
- * @date 2018/6/17 下午5:01
+ * @date 2018/6/19 下午5:01
  * @description ${TODO}
  **/
-@Document(collection = "user")
-public class CDNLogEntity implements Serializable {
-    private String date;
+
+public class DataLog implements Serializable {
+    private Long id;
     private String ip;
     private String referer;
+    private Date dateTime;
     private String targetUrl;
 
-    public String getDate() {
-        return date;
+    public Long getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getIp() {
@@ -38,6 +38,14 @@ public class CDNLogEntity implements Serializable {
 
     public void setReferer(String referer) {
         this.referer = referer;
+    }
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getTargetUrl() {

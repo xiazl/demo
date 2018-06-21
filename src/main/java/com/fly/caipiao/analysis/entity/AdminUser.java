@@ -7,11 +7,12 @@ import java.util.Date;
  * @date 2018/6/19 下午3:28
  * @description ${TODO}
  **/
-public class User {
+public class AdminUser {
     private Integer id;
     private String username;
     private String password;
-    private String salt;
+    private String cellphone;
+    private String statusFlag;
     private Date createTime;
 
     public Integer getId() {
@@ -38,12 +39,20 @@ public class User {
         this.password = password;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getCellphone() {
+        return cellphone;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
+    }
+
+    public String getStatusFlag() {
+        return statusFlag;
+    }
+
+    public void setStatusFlag(String statusFlag) {
+        this.statusFlag = statusFlag;
     }
 
     public Date getCreateTime() {
