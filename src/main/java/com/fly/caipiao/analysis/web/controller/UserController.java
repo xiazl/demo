@@ -73,7 +73,7 @@ public class UserController {
 
     @RequestMapping("/setting")
     public String profile(Integer id) {
-        return "userPwd";
+        return "user_pwd";
     }
 
     @ResponseBody
