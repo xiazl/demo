@@ -5,9 +5,9 @@ import java.util.Date;
 /**
  * @author baidu
  * @date 2018/6/19 下午3:28
- * @description ${TODO}
+ * @description 用户
  **/
-public class AdminUser {
+public class User {
     private Integer id;
     private String username;
     private String password;

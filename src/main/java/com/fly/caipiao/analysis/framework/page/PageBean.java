@@ -1,48 +1,49 @@
 package com.fly.caipiao.analysis.framework.page;
 
 /**
- * 分页对象bean
+ * jquery dataTable分页对象bean
  *
  * @author baidu
  */
 
 public class PageBean {
+
     /**
      * current page number
      */
     private int current = 1;
+    /**
+     * start  number
+     */
+    private int iDisplayStart = 0;
 
     /**
      * number of data items per page
      */
-    private int pageSize = 50;
-
-    /**
-     * total number of data items
-     */
-    private long total;
+    private int iDisplayLength = 50;
 
     public int getCurrent() {
-        return current;
+        return iDisplayStart/iDisplayLength+1;
     }
 
     public void setCurrent(int current) {
         this.current = current;
     }
 
-    public long getTotal() {
-        return total;
+    public int getiDisplayStart() {
+        return iDisplayStart;
     }
 
-    public void setTotal(long total) {
-        this.total = total;
+    public void setiDisplayStart(int iDisplayStart) {
+        this.iDisplayStart = iDisplayStart;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getiDisplayLength() {
+        return iDisplayLength;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setiDisplayLength(int iDisplayLength) {
+        this.iDisplayLength = iDisplayLength;
     }
+
 }

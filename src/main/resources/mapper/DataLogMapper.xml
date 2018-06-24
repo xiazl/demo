@@ -17,9 +17,12 @@
         </foreach>
     </insert>
 
-    <select id="list" resultType="com.fly.caipiao.analysis.entity.AdminUser">
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.DataLog">
         select *
-        from data_log
+        from data_log where 1 = 1
+        <if test="sSearch!=null and sSearch.length > 0">
+           and ip like concat('%',#{sSearch},'%')
+        </if>
     </select>
 
 </mapper>

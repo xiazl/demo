@@ -10,20 +10,20 @@ import javax.validation.constraints.NotNull;
  * @description 用户
  **/
 public class UserVO {
-    // 用户名
-    @NotNull(message = "username不能为空")
-    @Length(min=5,max = 40,message = "为5～15位")
+    private Integer id;
+    // 旧密码
+    @NotNull(message = "用户名不能为空")
+    @Length(min=5,max = 15,message = "用户名为5～15位字符")
     private String username;
-    // 密码
-    @NotNull(message = "密码为5～15位")
-    @Length(min=5,max = 15,message = "")
-    private String password;
-    // 昵称
-    private String nickname;
-    // 手机号
     private String cellphone;
-    // 头像
-    private String logo;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -33,35 +33,11 @@ public class UserVO {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public String getCellphone() {
         return cellphone;
     }
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 }

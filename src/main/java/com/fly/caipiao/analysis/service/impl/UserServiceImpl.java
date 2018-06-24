@@ -1,15 +1,22 @@
 package com.fly.caipiao.analysis.service.impl;
 
-import com.fly.caipiao.analysis.entity.AdminUser;
+import com.fly.caipiao.analysis.common.RequestContext;
+import com.fly.caipiao.analysis.entity.User;
+import com.fly.caipiao.analysis.framework.excepiton.AppException;
+import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.framework.page.PageHelp;
-import com.fly.caipiao.analysis.mapper.AdminUserMapper;
+import com.fly.caipiao.analysis.mapper.UserMapper;
 import com.fly.caipiao.analysis.service.UserService;
+import com.fly.caipiao.analysis.web.controller.vo.UserPwdVO;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,32 +27,65 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static final String DEFAULT_PWD = "123456a";
+    private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     @Autowired
-    private AdminUserMapper adminUserMapper;
+    private UserMapper userMapper;
 
     @Override
-    public void add(AdminUser adminUser) {
-        if(adminUser.getId() != null){
-            adminUserMapper.update(adminUser);
+    public void add(User user) {
+        if(user.getId() != null){
+            userMapper.update(user);
+        } else {
+            Integer check = userMapper.checkUsername(user.getUsername());
+            if(check != null) {
+                throw new AppException("用户名已存在");
+            }
+            user.setCreateTime(new Date());
+            user.setPassword(ENCODER.encode(DEFAULT_PWD));
+            userMapper.insert(user);
         }
-        adminUserMapper.insert(adminUser);
     }
 
     @Override
-    public AdminUser getById(Integer id) {
-        return adminUserMapper.getById(id);
+    public User getById(Integer id) {
+        return userMapper.getById(id);
     }
 
     @Override
     public void delete(Integer id) {
-        adminUserMapper.updateStatus(id);
+        userMapper.updateStatus(id);
     }
 
     @Override
-    public PageDataResult<AdminUser> list(PageBean pageBean) {
-        PageHelper.startPage(pageBean.getCurrent(),pageBean.getPageSize());
-        List list = adminUserMapper.list(null);
+    public void update(User user) {
+        userMapper.update(user);
+    }
+
+    @Override
+    public void updatePwd(UserPwdVO userPwdVO) {
+        String username = RequestContext.getUser().getUsername();
+        if(username == null){
+            throw new AppException("用户不存在");
+        }
+        User entity = userMapper.getByUsername(username);
+        if(!ENCODER.matches(userPwdVO.getOldPassword(),entity.getPassword())){
+            throw new AppException("旧密码错误");
+        }
+        entity.setPassword(ENCODER.encode(userPwdVO.getPassword()));
+        userMapper.update(entity);
+
+    }
+
+    @Override
+    public void resetPwd(Integer id) {
+    }
+
+    @Override
+    public PageDataResult<User> list(PageBean pageBean, ConditionVO conditionVO) {
+        PageHelper.startPage(pageBean.getCurrent(),pageBean.getiDisplayLength());
+        List list = userMapper.list(conditionVO);
         return PageHelp.getDataResult(list);
     }
 }

@@ -1,7 +1,7 @@
 package com.fly.caipiao.analysis.framework.security;
 
-import com.fly.caipiao.analysis.entity.AdminUser;
-import com.fly.caipiao.analysis.mapper.AdminUserMapper;
+import com.fly.caipiao.analysis.mapper.RoleMapper;
+import com.fly.caipiao.analysis.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author baidu
  * @date 2018/6/19 下午4:02
@@ -24,16 +26,23 @@ public class UserCredentials implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserCredentials.class);
 
     private static final PasswordEncoder passwordEncoder  = new BCryptPasswordEncoder();
+
     @Autowired
-    private AdminUserMapper adminUserMapper;
+    private UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AdminUser entity = adminUserMapper.getByUsername(username);
+        com.fly.caipiao.analysis.entity.User entity = userMapper.getByUsername(username);
         if(entity == null){
             throw new UsernameNotFoundException("用户不存在");
         }
-        User user = new User(username, entity.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+
+        List<String> roleString = roleMapper.getRoleStringByUserId(entity.getId());
+        User user = new User(username, entity.getPassword(), AuthorityUtils.
+                createAuthorityList(roleString.toArray(new String[]{})));
+
         return user;
     }
 }

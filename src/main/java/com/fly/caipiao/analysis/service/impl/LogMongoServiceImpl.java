@@ -1,7 +1,7 @@
 package com.fly.caipiao.analysis.service.impl;
 
 import com.fly.caipiao.analysis.entity.CDNLogEntity;
-import com.fly.caipiao.analysis.mapper.AdminUserMapper;
+import com.fly.caipiao.analysis.mapper.UserMapper;
 import com.fly.caipiao.analysis.service.LogMongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -23,7 +23,7 @@ public class LogMongoServiceImpl implements LogMongoService {
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
-    private AdminUserMapper adminUserMapper;
+    private UserMapper userMapper;
 
     @Override
     public List find() {

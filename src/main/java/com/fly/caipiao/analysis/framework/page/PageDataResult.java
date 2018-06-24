@@ -1,9 +1,6 @@
 package com.fly.caipiao.analysis.framework.page;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 分页查询返回bean
@@ -14,47 +11,39 @@ public class PageDataResult<T> {
 	/**
 	 * query parameters
 	 */
-	private Map filter;
+//	private Map filter;
 	/**
 	 * page parameter
 	 */
-	private PageBean pager;
+	private Long iTotalRecords;
+
+	private Long iTotalDisplayRecords;
 	/**
 	 * An array that contains the actual objects
 	 */
-	private List<T> dataList = null;
+	private List<T> data = null;
 
-	public Map getFilter() {
-		return filter;
+	public Long getiTotalRecords() {
+		return iTotalRecords;
 	}
 
-	public void setFilter(Map filter) {
-		this.filter = filter;
+	public void setiTotalRecords(Long iTotalRecords) {
+		this.iTotalRecords = iTotalRecords;
 	}
 
-	public PageBean getPager() {
-		return pager;
+	public Long getiTotalDisplayRecords() {
+		return iTotalDisplayRecords;
 	}
 
-	public void setPager(PageBean pager) {
-		this.pager = pager;
+	public void setiTotalDisplayRecords(Long iTotalDisplayRecords) {
+		this.iTotalDisplayRecords = iTotalDisplayRecords;
 	}
 
-	public List<T> getDataList() {
-		return dataList;
+	public List<T> getData() {
+		return data;
 	}
 
-	public void setDataList(List<T> dataList) {
-		this.dataList = dataList;
+	public void setData(List<T> data) {
+		this.data = data;
 	}
-
-	public <C> PageDataResult<C> convert(Function<? super T, ? extends C> mapper){
-		PageDataResult<C> response = new PageDataResult<C>();
-		response.setFilter(this.getFilter());
-		response.setPager(this.getPager());
-		response.setDataList(this.getDataList().stream().map(mapper)
-				.collect(Collectors.toList()));
-		return response;
-	}
-
 }

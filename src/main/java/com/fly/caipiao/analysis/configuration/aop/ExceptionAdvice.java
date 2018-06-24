@@ -1,6 +1,6 @@
 package com.fly.caipiao.analysis.configuration.aop;
 
-import com.fly.caipiao.analysis.common.ApiResultVO;
+import com.fly.caipiao.analysis.framework.response.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class ExceptionAdvice {
         logger.error("server exception：", throwable);
         Throwable cause = throwable;
 
-        ApiResultVO result = new ApiResultVO();
+        Result result = new Result();
 
         if (cause instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException e = (MethodArgumentNotValidException) cause;
@@ -38,9 +38,9 @@ public class ExceptionAdvice {
             for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
                 list.add(fieldError.getDefaultMessage());
             }
-            result.setMessage(StringUtils.join(list, ","));
+            result.setErrorMessage(StringUtils.join(list, ","));
         }else{
-            result.setMessage(cause.getMessage());
+            result.setErrorMessage(cause.getMessage());
         }
         return result;
     }

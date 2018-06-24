@@ -4,6 +4,7 @@ import com.fly.caipiao.analysis.common.ApiResultVO;
 import com.fly.caipiao.analysis.service.LogMongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,6 +25,7 @@ public class TestController {
         return "user";
     }
 
+    @ResponseBody
     @RequestMapping("/list")
     public ApiResultVO find(){
 //        List<CDNLogEntity> list =  logMongoService.find();

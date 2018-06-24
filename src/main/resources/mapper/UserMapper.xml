@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.fly.caipiao.analysis.mapper.AdminUserMapper">
-   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.AdminUser" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.UserMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.User" >
        <id column="id" property="id" />
        <result column="username" property="username"/>
        <result column="password" property="password"/>
@@ -11,11 +11,15 @@
    </resultMap>
 
     <insert id="insert">
-        insert into admin_user(username,password,cellphone,create_time)
+        insert into `user` (username,password,cellphone,create_time)
         values (#{username},#{password},#{cellphone},#{createTime})
     </insert>
+
     <update id="update">
-        update admin_user set password=#{password}
+        update `user` set status_flag = status_flag
+        <if test="password!=null and password.length() > 0">
+            ,password=#{password}
+        </if>
         <if test="cellphone!=null and cellphone.length() > 0">
             ,cellphone=#{cellphone}
         </if>
@@ -23,28 +27,34 @@
     </update>
 
     <update id="updateStatus">
-        update admin_user set status_flag=1
+        update `user` set status_flag=1
         where id = #{id}
     </update>
 
     <select id="getByUsername" resultMap="BaseResultMap" parameterType="java.util.Map">
         select id,username,password
-        from admin_user
+        from `user`
         where username = #{username} and status_flag=0 limit 1
     </select>
 
-    <select id="getById" resultType="com.fly.caipiao.analysis.entity.AdminUser">
+    <select id="checkUsername" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select 1
+        from `user`
+        where username = #{username} limit 1
+    </select>
+
+    <select id="getById" resultType="com.fly.caipiao.analysis.entity.User">
         select id,username,password
-        from admin_user
+        from `user`
 		where id = #{id} and status_flag=0
     </select>
 
-    <select id="list" resultType="com.fly.caipiao.analysis.entity.AdminUser">
-        select id,username,password,create_time
-        from admin_user
-        where and status_flag=0
-        <if test="username!=null and username.length()" > 0>
-            username like concat('%',#{username},'%')
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.User">
+        select id,username,cellphone,create_time
+        from `user`
+        where status_flag=0
+        <if test="sSearch!=null and sSearch.length() > 0" >
+            and username like concat('%',#{sSearch},'%')
         </if>
     </select>
 

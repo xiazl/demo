@@ -29,6 +29,10 @@ public class Result<T> {
     public void setMessage(String message) {
         this.message = message;
     }
+    public void setErrorMessage(String message) {
+        this.setCode(2000);
+        this.message = message;
+    }
 
     public T getData() {
         return data;

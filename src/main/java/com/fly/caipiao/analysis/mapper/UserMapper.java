@@ -1,6 +1,7 @@
 package com.fly.caipiao.analysis.mapper;
 
-import com.fly.caipiao.analysis.entity.AdminUser;
+import com.fly.caipiao.analysis.entity.User;
+import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,20 +14,20 @@ import java.util.List;
  **/
 
 @Mapper
-public interface AdminUserMapper {
+public interface UserMapper {
     /**
      * 插入用户
-     * @param adminUser
+     * @param user
      * @return
      */
-    Integer insert(AdminUser adminUser);
+    Integer insert(User user);
 
     /**
      * 更新用户
-     * @param adminUser
+     * @param user
      * @return
      */
-    Integer update(AdminUser adminUser);
+    Integer update(User user);
 
     /**
      * 删除用户
@@ -37,22 +38,29 @@ public interface AdminUserMapper {
 
     /**
      * 列表查询
-     * @param adminUser
+     * @param conditionVO
      * @return
      */
-    List<AdminUser> list(AdminUser adminUser);
+    List<User> list(ConditionVO conditionVO);
 
     /**
      * 查询用户
      * @param username
      * @return
      */
-    AdminUser getByUsername(@Param("username") String username);
+    Integer checkUsername(@Param("username") String username);
+
+    /**
+     * 查询用户
+     * @param username
+     * @return
+     */
+    User getByUsername(@Param("username") String username);
 
     /**
      * 查询用户
      * @param id
      * @return
      */
-    AdminUser getById(@Param("id") Integer id);
+    User getById(@Param("id") Integer id);
 }

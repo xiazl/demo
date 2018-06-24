@@ -1,89 +1,159 @@
-var table = $('#logTable')
-    .dataTable(
+
+$().ready(function () {
+    var table = $('#userTable').DataTable(
         {
-            "bPaginate" : true,//分页工具条显示
-            //"sPaginationType" : "full_numbers",//分页工具条样式
-            "bStateSave" : true, //是否打开客户端状态记录功能,此功能在ajax刷新纪录的时候不会将个性化设定回复为初始化状态
-            "bScrollCollapse" : true, //当显示的数据不足以支撑表格的默认的高度
-            "bLengthChange" : true, //每页显示的记录数
-            "bFilter" : false, //搜索栏
-            "bSort" : true, //是否支持排序功能
-            "bInfo" : true, //显示表格信息
-            "bAutoWidth" : true, //自适应宽度
-            "bJQueryUI" : false,//是否开启主题
-            "bDestroy" : true,
-            "bProcessing" : true, //开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
-            "bServerSide" : true,//服务器处理分页，默认是false，需要服务器处理，必须true
-            "sAjaxDataProp" : "aData",//是服务器分页的标志，必须有
-            "sAjaxSource" : "${basePath}pushEntity/getTableData",//通过ajax实现分页的url路径。
-            "aoColumns" : [//初始化要显示的列
+            "bPaginate": true,
+            "bStateSave": true,
+            "bScrollCollapse": true,
+            "bLengthChange": true,
+            "bFilter": true,  // 搜索栏
+            "bSort": true,    // 是否支持排序功能
+            "bInfo": true,
+            "bAutoWidth": true,
+            "bDestroy": true,
+            "bProcessing": true,
+            "bServerSide": true,        // 服务器处理分页
+            "sAjaxSource": "/user/list", // 通过ajax加载数据
+            "aoColumns": [
                 {
-                    "mDataProp" : "id",//获取列数据，跟服务器返回字段一致
-                    "sClass" : "center",//显示样式
-                    // "mRender" : function(data, type, full) {//返回自定义的样式
-                    //     return "<label><input type='checkbox' class='ace' /><span class='lbl'></span></label>"
-                    // }
+                    "mDataProp": "id",
+                    "sClass": "center"
                 },
                 {
-                    "mDataProp" : "appName"
+                    "mDataProp": "username"
                 },
                 {
-                    "mDataProp" : "apiKey"
+                    "mDataProp": "cellphone"
                 },
                 {
-                    "mDataProp" : "secretKey"
+                    "mDataProp": "createTime"
                 },
                 {
-                    "mDataProp" : "createTime",
-                    "mRender" : function(data, type, full) {
-                        return new Date(data)//处理时间显示
-                            .toLocaleString();
+                    "mDataProp": null,
+                    "sClass" : "center",
+                    "mRender": function (data, type, full) {
+                        return "<span class='center'><a class='fa fa-edit' title='编辑'>&nbsp;&nbsp;</a>" +
+                            "<a class='glyphicon glyphicon-trash' title='删除'></a></span>";
                     }
-                }, {
-                    "mDataProp" : "createTime",
-                    "mRender" : function(data, type, full) {
-                        return "<span class='label label-sm label-info arrowed arrowed-righ'>Sold</span>"
-                    }
+                }
+            ],
+            "oLanguage": { // 中文替换
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
                 },
-                {
-                    "mDataProp" : "createTime",
-                    "mRender" : function(data, type, full) {
-                        return "<div class='visible-md visible-lg hidden-sm hidden-xs action-buttons'><a class='blue' href='#'><i class='icon-zoom-in bigger-130'></i></a><a class='green' href='#'><i class='icon-pencil bigger-130'></i></a><a class='red' href='#'><i class='icon-trash bigger-130'></i></a></div>"
-                    }
-                } ],
-            "aoColumnDefs" : [ {//用来设置列一些特殊列的属性
-                "bSortable" : false,
-                "aTargets" : [ 0 ]
-                //第一列不排序
-            }, {
-                "bSortable" : false,
-                "aTargets" : [ 5 ]
-            }, {
-                "bSortable" : false,
-                "aTargets" : [ 6 ]
-            } ],
-            "oLanguage" : {//语言设置
-                "sProcessing" : "处理中...",
-                "sLengthMenu" : "显示 _MENU_ 项结果",
-                "sZeroRecords" : "没有匹配结果",
-                "sInfo" : "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                "sInfoEmpty" : "显示第 0 至 0 项结果，共 0 项",
-                "sInfoFiltered" : "(由 _MAX_ 项结果过滤)",
-                "sInfoPostFix" : "",
-                "sSearch" : "搜索:",
-                "sUrl" : "",
-                "sEmptyTable" : "表中数据为空",
-                "sLoadingRecords" : "载入中...",
-                "sInfoThousands" : ",",
-                "oPaginate" : {
-                    "sFirst" : "首页",
-                    "sPrevious" : "上页",
-                    "sNext" : "下页",
-                    "sLast" : "末页"
-                },
-                "oAria" : {
-                    "sSortAscending" : ": 以升序排列此列",
-                    "sSortDescending" : ": 以降序排列此列"
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
                 }
             }
         });
+
+    $('#userTable tbody').on('click', 'a.glyphicon', function (args) {
+        var dataObj = table.row($(this).parents('tr')).data();
+        var data  = {id: dataObj.id};
+        var url = '/user/delete';
+        layer.confirm('确认删除？', {icon: 3, title: '提示', offset: '30%'}, function (index) {
+            submitWithAjax(url,data);
+            layer.close(index);
+        });
+        // $("#confirmModal").modal('show');
+    });
+
+    function submitWithAjax(url,data){
+        $.ajax({
+            url: url,
+            type: 'POST',
+            // dataType: 'json',
+            data: data,
+        }).done(function (result) {
+            if (result.code == "1000") {
+                layerMsg("删除成功",true)
+                table.ajax.reload();
+            } else {
+                layerMsg(result.message,false,{time: 3000})
+            }
+        }).fail(function () {
+                layerMsg("网络异常",false,{time: 3000})
+            });
+    }
+
+    $("#myModalBtn").click(function() {
+        $('#myModalLabel').text('添加用户');
+        $("#userAddForm")[0].reset();
+        $('#username').attr('disabled',false);
+        $('.modal-body .form-group').eq(2).removeClass('hidden')
+    })
+
+    $("#addSave").click(function() {
+        var username = $('#username').val();
+        var cellphone = $('#cellphone').val();
+        var id = $('#id').val();
+        $.ajax({
+            url: '/user/add',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify({id:id,username:username,cellphone:cellphone}),
+            success: function (result) {
+                if (result.code == "1000") {
+                    layerMsg('保存成功',true);
+                    $("#myModal").modal('hide');
+                    table.ajax.reload();
+                } else {
+                    layerMsg(result.message,false,{time: 3000})
+                }
+            },
+            error: function () {
+                layerMsg("网络异常",false,{time: 3000})
+            }
+        })
+    })
+
+    $('#userTable tbody').on('click', 'a.fa-edit', function (args) {
+        var dataObj = table.row($(this).parents('tr')).data();
+        $("#myModal").modal('show');
+        $('.modal-body .form-group').eq(2).addClass('hidden')
+        $('#myModalLabel').text('修改用户');
+        $('#username').attr('disabled',true);
+        $('#username').val(dataObj.username);
+        $('#cellphone').val(dataObj.cellphone);
+        $('#id').val(dataObj.id);
+    });
+
+
+    function layerMsg(msg, isSuccess, opts) {
+        var time;
+        try {
+            time = ($('<div>' + msg + '</div>').text().length / 4 + 1) * 1000;
+            if (!$.isNumeric(time)) {
+                time = (msg.length / 4 + 1) * 1000;
+            }
+        } catch (err) {
+            time = (msg.length / 4 + 1) * 1000;
+        }
+
+        var options = {time: time, offset: '40%'};
+        if (isSuccess) {
+            options = $.extend(true, options, {icon: 1, closeBtn: 1}, opts || {});
+        } else {
+            options = $.extend(true, options, {icon: 0, /*shade: 0.3, shadeClose: true, */closeBtn: 1}, opts || {});
+        }
+        layer.msg(msg, options);
+    }
+
+})

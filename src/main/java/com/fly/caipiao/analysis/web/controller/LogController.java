@@ -1,6 +1,10 @@
 package com.fly.caipiao.analysis.web.controller;
 
 import com.fly.caipiao.analysis.common.ApiResultVO;
+import com.fly.caipiao.analysis.entity.DataLog;
+import com.fly.caipiao.analysis.framework.page.ConditionVO;
+import com.fly.caipiao.analysis.framework.page.PageBean;
+import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,5 +34,12 @@ public class LogController {
     public ApiResultVO analysis(String fileName){
         logService.analysis(fileName);
         return new ApiResultVO();
+    }
+
+    @ResponseBody
+    @RequestMapping("/list")
+    public PageDataResult<DataLog> list(PageBean pageBean,ConditionVO conditionVO) {
+        // jquery datatable服务端分页
+        return logService.list(pageBean,conditionVO);
     }
 }
