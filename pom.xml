@@ -80,6 +80,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:include="common_css :: common_head('日志')">
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- template -->
+        <div th:include="common :: copy"></div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">日志文件分析记录</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            文件列表
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="fileLogTable">
+                                <thead>
+                                <tr>
+                                    <th class="center">文件路径</th>
+                                    <th>文件大小</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            </table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+
+
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- DataTables JavaScript -->
+    <div th:include="common_js :: common_foot"></div>
+
+    <script src="../js/log_file.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+
+</body>
+
+</html>

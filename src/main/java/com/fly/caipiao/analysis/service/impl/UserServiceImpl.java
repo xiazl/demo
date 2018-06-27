@@ -2,19 +2,25 @@ package com.fly.caipiao.analysis.service.impl;
 
 import com.fly.caipiao.analysis.common.RequestContext;
 import com.fly.caipiao.analysis.entity.User;
+import com.fly.caipiao.analysis.entity.UserRole;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.framework.page.PageHelp;
 import com.fly.caipiao.analysis.mapper.UserMapper;
+import com.fly.caipiao.analysis.mapper.UserRoleMapper;
 import com.fly.caipiao.analysis.service.UserService;
 import com.fly.caipiao.analysis.web.controller.vo.UserPwdVO;
+import com.fly.caipiao.analysis.web.controller.vo.UserVO;
 import com.github.pagehelper.PageHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -32,9 +38,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
-    public void add(User user) {
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public void add(UserVO userVO) {
+        User user = new User();
+        BeanUtils.copyProperties(userVO,user);
+        Integer roleId = userVO.getRole();
         if(user.getId() != null){
             userMapper.update(user);
         } else {
@@ -45,6 +57,12 @@ public class UserServiceImpl implements UserService {
             user.setCreateTime(new Date());
             user.setPassword(ENCODER.encode(DEFAULT_PWD));
             userMapper.insert(user);
+
+
+            UserRole userRole = new UserRole();
+            userRole.setRoleId(roleId);
+            userRole.setUserId(user.getId());
+            userRoleMapper.insert(userRole);
         }
     }
 

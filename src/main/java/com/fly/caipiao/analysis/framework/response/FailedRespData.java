@@ -12,7 +12,7 @@ public class FailedRespData<T> extends Result{
     public static final String MESSAGE = "操作失败";
 
     public FailedRespData() {
-        this(null);
+        this(MESSAGE);
     }
 
     public FailedRespData(String message) {

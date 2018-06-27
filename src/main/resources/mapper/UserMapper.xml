@@ -10,7 +10,8 @@
        <result column="create_time" property="createTime"/>
    </resultMap>
 
-    <insert id="insert">
+    <insert id="insert" parameterType="com.fly.caipiao.analysis.entity.User" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         insert into `user` (username,password,cellphone,create_time)
         values (#{username},#{password},#{cellphone},#{createTime})
     </insert>

@@ -17,7 +17,7 @@ public class SuccessRespData<T> extends Result {
     }
 
     public SuccessRespData(T data) {
-        this(data,null);
+        this(data,MESSAGE);
     }
 
     public SuccessRespData(T data, String message) {

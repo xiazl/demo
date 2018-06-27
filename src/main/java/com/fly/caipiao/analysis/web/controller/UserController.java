@@ -42,9 +42,7 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Result add(@RequestBody @Valid UserVO userVO) {
-        User user = new User();
-        BeanUtils.copyProperties(userVO,user);
-        userService.add(user);
+        userService.add(userVO);
         return ResponseData.success();
     }
 

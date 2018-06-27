@@ -25,4 +25,27 @@
         </if>
     </select>
 
+    <select id="listByPv" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count'
+        from data_log group by target_url order by `count` desc
+    </select>
+
+    <select id="listByUv" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count'
+        from data_log group by target_url,ip order by `count` desc
+    </select>
+
+    <select id="listByDate" resultType="com.fly.caipiao.analysis.vo.DateVisitVO">
+        select date(date_time) as 'date',count(1) as 'count'
+        from data_log group by date(date_time) order by `count` desc
+    </select>
+    <select id="listByResource" resultType="com.fly.caipiao.analysis.vo.ResourceVisitVO">
+        select target_url as name,referer,count(1) as 'count'
+        from data_log group by target_url,referer order by `count` desc
+    </select>
+    <select id="listByPlatform" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select referer as name,count(1) as 'count'
+        from data_log group by `name` order by `count` desc
+    </select>
+
 </mapper>

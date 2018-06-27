@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.CorsUtils;
  **/
 
 @Configuration
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
@@ -44,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .formLogin()                      // 使用form表单登录
+//                .failureUrl("/login?error=true")
                 .loginPage("/web/login")          // 跳转登录页面
                 .loginProcessingUrl("/admin/login")   // 自定义的登录处理URL
                 .defaultSuccessUrl("/web/index")   // 登录成功跳转地址

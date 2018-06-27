@@ -1,6 +1,6 @@
 server:
   servlet:
-    session.timeout: 600s
+#    session.timeout: 1800s
     context-path: /
   port: 8070
   tomcat.uri-encoding: UTF-8
@@ -54,6 +54,7 @@ logging:
     root: info
     com.fly.caipiao.comment.mapper: debug
 
+log.data.path: /Users/baidu/Downloads
 
 ---
 spring:

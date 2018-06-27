@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head th:include="common_css :: common_head('用户管理')">
 
@@ -20,9 +22,11 @@
             <!-- /.col-lg-12 -->
             <div class="panel-body">
                 <!-- Button trigger modal -->
-                <button id="myModalBtn" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
-                    新建
-                </button>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button id="myModalBtn" class="btn btn-primary pull-right" data-toggle="modal"
+                            data-target="#myModal">新建
+                    </button>
+                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <form id="userAddForm" role="form">
@@ -41,6 +45,15 @@
                                         <div class="col-sm-10">
                                             <input class="form-control" name="username" id="username" type="text" required>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-form-label">角色</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="role" id="optionsRadiosInline1" value="1" checked>管理员
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="role" id="optionsRadiosInline2" value="2">普通用户
+                                        </label>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">手机号</label>
@@ -103,6 +116,7 @@
 <div th:include="common_js :: common_foot"></div>
 
 <script src="../js/jquery.validate.min.js"></script>
+<script src="../js/common.js"></script>
 <script src="../js/user.js"></script>
 <script src="../js/layer/layer.js"></script>
 

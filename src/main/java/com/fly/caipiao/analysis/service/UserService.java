@@ -5,6 +5,7 @@ import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.web.controller.vo.UserPwdVO;
+import com.fly.caipiao.analysis.web.controller.vo.UserVO;
 
 /**
  * @author baidu
@@ -15,7 +16,7 @@ public interface UserService {
     /**
      * 用户添加
      */
-    void add(User user);
+    void add(UserVO user);
 
     /**
      * 用户更新

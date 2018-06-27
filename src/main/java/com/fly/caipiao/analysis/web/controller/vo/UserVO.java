@@ -15,6 +15,7 @@ public class UserVO {
     @NotNull(message = "用户名不能为空")
     @Length(min=5,max = 15,message = "用户名为5～15位字符")
     private String username;
+    private Integer role;
     private String cellphone;
 
     public Integer getId() {
@@ -23,6 +24,14 @@ public class UserVO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public String getUsername() {

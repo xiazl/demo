@@ -6,10 +6,16 @@ label.error, label.error {
     text-align:center;
 }
 
+
+.table>thead>tr>th.center{
+    text-align:center;
+}
+
 .vam {
     vertical-align: middle;
 }
 
 .red {
+
     color: #f30;;
 }

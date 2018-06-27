@@ -1,5 +1,22 @@
 
 $().ready(function () {
+    $("#userAddForm").validate({
+        rules: {
+            username: {
+                required: true,
+                minlength: 5,
+                maxlength: 15
+            }
+        },
+        messages: {
+            username: {
+                required: "用户名不能唯空",
+                minlength: "用户名不能少于5个字符",
+                maxlength: "用户名不能多余15个字符"
+            }
+        }
+    });
+
     var table = $('#userTable').DataTable(
         {
             "bPaginate": true,
@@ -31,10 +48,8 @@ $().ready(function () {
                 {
                     "mDataProp": null,
                     "sClass" : "center",
-                    "mRender": function (data, type, full) {
-                        return "<span class='center'><a class='fa fa-edit' title='编辑'>&nbsp;&nbsp;</a>" +
-                            "<a class='glyphicon glyphicon-trash' title='删除'></a></span>";
-                    }
+                    "mRender": editButton
+
                 }
             ],
             "oLanguage": { // 中文替换
@@ -62,6 +77,19 @@ $().ready(function () {
                 }
             }
         });
+
+    /**
+     * 是否显示编辑按钮
+     * @returns {*}
+     */
+    function editButton(){
+        if($('#myModalBtn').length > 0){
+            return "<span class='center'><a class='fa fa-edit' title='编辑'>&nbsp;&nbsp;</a>" +
+                "<a class='glyphicon glyphicon-trash' title='删除'></a></span>";
+        } else {
+            return "<span class='glyphicon glyphicon-ban-circle'></span>";
+        }
+    }
 
     $('#userTable tbody').on('click', 'a.glyphicon', function (args) {
         var dataObj = table.row($(this).parents('tr')).data();
@@ -96,19 +124,24 @@ $().ready(function () {
         $('#myModalLabel').text('添加用户');
         $("#userAddForm")[0].reset();
         $('#username').attr('disabled',false);
-        $('.modal-body .form-group').eq(2).removeClass('hidden')
+        $('.modal-body .form-group').eq(1).removeClass('hidden')
+        $('.modal-body .form-group').eq(3).removeClass('hidden')
     })
 
     $("#addSave").click(function() {
+        if(!$("#userAddForm").valid()){
+            return
+        }
         var username = $('#username').val();
         var cellphone = $('#cellphone').val();
+        var role = $('input[name="role"]:checked').val();
         var id = $('#id').val();
         $.ajax({
             url: '/user/add',
             type: 'POST',
             dataType: 'json',
             contentType: "application/json",
-            data: JSON.stringify({id:id,username:username,cellphone:cellphone}),
+            data: JSON.stringify({id:id,username:username,role: role, cellphone:cellphone}),
             success: function (result) {
                 if (result.code == "1000") {
                     layerMsg('保存成功',true);
@@ -127,33 +160,13 @@ $().ready(function () {
     $('#userTable tbody').on('click', 'a.fa-edit', function (args) {
         var dataObj = table.row($(this).parents('tr')).data();
         $("#myModal").modal('show');
-        $('.modal-body .form-group').eq(2).addClass('hidden')
+        $('.modal-body .form-group').eq(1).addClass('hidden')
+        $('.modal-body .form-group').eq(3).addClass('hidden')
         $('#myModalLabel').text('修改用户');
         $('#username').attr('disabled',true);
         $('#username').val(dataObj.username);
         $('#cellphone').val(dataObj.cellphone);
         $('#id').val(dataObj.id);
     });
-
-
-    function layerMsg(msg, isSuccess, opts) {
-        var time;
-        try {
-            time = ($('<div>' + msg + '</div>').text().length / 4 + 1) * 1000;
-            if (!$.isNumeric(time)) {
-                time = (msg.length / 4 + 1) * 1000;
-            }
-        } catch (err) {
-            time = (msg.length / 4 + 1) * 1000;
-        }
-
-        var options = {time: time, offset: '40%'};
-        if (isSuccess) {
-            options = $.extend(true, options, {icon: 1, closeBtn: 1}, opts || {});
-        } else {
-            options = $.extend(true, options, {icon: 0, /*shade: 0.3, shadeClose: true, */closeBtn: 1}, opts || {});
-        }
-        layer.msg(msg, options);
-    }
 
 })

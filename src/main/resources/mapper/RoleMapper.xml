@@ -13,4 +13,14 @@
         where ur.user_id = #{id} and ur.status_flag = 0 and r.status_flag = 0
     </select>
 
+    <select id="getById" resultType="com.fly.caipiao.analysis.entity.Role">
+        select id,`name` from role where
+        where id = #{id}
+    </select>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.Role">
+        select id,`name`,`desc` from role where
+        status_flag = 1;
+    </select>
+
 </mapper>
