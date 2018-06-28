@@ -2,6 +2,7 @@ package com.fly.caipiao.analysis.mapper;
 
 import com.fly.caipiao.analysis.entity.DataLog;
 import com.fly.caipiao.analysis.vo.DateVisitVO;
+import com.fly.caipiao.analysis.vo.StatisticsVO;
 import com.fly.caipiao.analysis.vo.VisitVO;
 import com.fly.caipiao.analysis.vo.ResourceVisitVO;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
@@ -67,7 +68,32 @@ public interface DataLogMapper {
      * @return
      */
     List<VisitVO> listByPlatform(ConditionVO conditionVO);
+    
+    /**
+     * 按天统计
+     * @param
+     * @return
+     */
+    List<StatisticsVO> listByPlatAndDate();
 
+    /**
+     * 按月统计
+     * @param
+     * @return
+     */
+    List<StatisticsVO> listByPlatAndMonth();
 
+    /**
+     * 图表显示key值
+     * @param
+     * @return
+     */
+    List<String> listYKeys();
 
+    /**
+     * 图表显示key值
+     * @param
+     * @return
+     */
+    List<String> listXKeys();
 }

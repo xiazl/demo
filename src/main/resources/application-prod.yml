@@ -1,6 +1,6 @@
 server:
   servlet:
-    session.timeout: 600s
+#    session.timeout: 600s
     context-path: /
   port: 8070
   tomcat.uri-encoding: UTF-8

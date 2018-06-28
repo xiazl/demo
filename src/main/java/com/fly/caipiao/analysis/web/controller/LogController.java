@@ -4,14 +4,19 @@ import com.fly.caipiao.analysis.entity.DataLog;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
+import com.fly.caipiao.analysis.framework.response.ResponseData;
+import com.fly.caipiao.analysis.framework.response.Result;
 import com.fly.caipiao.analysis.service.LogService;
-import com.fly.caipiao.analysis.vo.DateVisitVO;
-import com.fly.caipiao.analysis.vo.ResourceVisitVO;
-import com.fly.caipiao.analysis.vo.VisitVO;
+import com.fly.caipiao.analysis.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author baidu
@@ -92,4 +97,73 @@ public class LogController {
     public PageDataResult<VisitVO> listByPlatform(PageBean pageBean, ConditionVO conditionVO) {
         return logService.listByPlatform(pageBean,conditionVO);
     }
+
+    @ResponseBody
+    @RequestMapping("/listByPlatAndDate")
+    public Result listByPlatAndDate() {
+        List<StatisticsVO> list = logService.listByPlatAndDate();
+        Map<String,Object> map = new HashMap<>();
+        for(StatisticsVO vo : list){
+            map.put(vo.getTime()+vo.getName(),vo.getCount());
+        }
+
+        List<String> ykeys = logService.listYKeys();
+        List<String> xkeys = logService.listXKeys();
+
+        RaphaelChartVO chartVO = new RaphaelChartVO();
+        List<Map> mapList = new ArrayList<>();
+        for(String x : xkeys){
+            Map<String,Object> nmap = new HashMap<>();
+            for(String y : ykeys) {
+                if(map.containsKey(x+y)){
+                    nmap.put(y, map.get(x+y));
+                } else {
+                    nmap.put(y, 0);
+                }
+            }
+            nmap.put("time",x);
+            mapList.add(nmap);
+        }
+
+        chartVO.setData(mapList);
+        chartVO.setXkey("time");
+        chartVO.setLabels(ykeys);
+        chartVO.setYkeys(ykeys);
+        return ResponseData.success(chartVO);
+    }
+
+    @ResponseBody
+    @RequestMapping("/listByPlatAndMonth")
+    public Result listByPlatAndMonth() {
+        List<StatisticsVO> list = logService.listByPlatAndMonth();
+        Map<String,Object> map = new HashMap<>();
+        for(StatisticsVO vo : list){
+            map.put(vo.getTime()+vo.getName(),vo.getCount());
+        }
+
+        List<String> ykeys = logService.listYKeys();
+        List<String> xkeys = logService.listXKeys();
+
+        RaphaelChartVO chartVO = new RaphaelChartVO();
+        List<Map> mapList = new ArrayList<>();
+        for(String x : xkeys){
+            Map<String,Object> nmap = new HashMap<>();
+            for(String y : ykeys) {
+                if(map.containsKey(x+y)){
+                    nmap.put(y, map.get(x+y));
+                } else {
+                    nmap.put(y, 0);
+                }
+            }
+            mapList.add(nmap);
+        }
+
+
+        chartVO.setData(mapList);
+        chartVO.setXkey("time");
+        chartVO.setLabels(ykeys);
+        chartVO.setYkeys(ykeys);
+        return ResponseData.success(chartVO);
+    }
+
 }

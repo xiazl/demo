@@ -52,7 +52,7 @@ logging:
   file: logs/analysis.log
   level:
     root: info
-    com.fly.caipiao.comment.mapper: debug
+    com.fly.caipiao.analysis.mapper: debug
 
 log.data.path: /Users/baidu/Downloads
 

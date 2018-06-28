@@ -10,6 +10,7 @@ import com.fly.caipiao.analysis.service.LogMongoService;
 import com.fly.caipiao.analysis.service.LogService;
 import com.fly.caipiao.analysis.vo.DateVisitVO;
 import com.fly.caipiao.analysis.vo.ResourceVisitVO;
+import com.fly.caipiao.analysis.vo.StatisticsVO;
 import com.fly.caipiao.analysis.vo.VisitVO;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -76,4 +77,26 @@ public class LogServiceImpl implements LogService {
         List list = dataLogMapper.listByPlatform(conditionVO);
         return PageHelp.getDataResult(list);
     }
+
+    @Override
+    public List<StatisticsVO> listByPlatAndDate(){
+        return dataLogMapper.listByPlatAndDate();
+    }
+
+    @Override
+    public List<StatisticsVO> listByPlatAndMonth(){
+        return dataLogMapper.listByPlatAndMonth();
+    }
+
+    @Override
+    public List<String> listXKeys(){
+        return dataLogMapper.listXKeys();
+    }
+
+    @Override
+    public List<String> listYKeys(){
+        return dataLogMapper.listYKeys();
+    }
+
+
 }

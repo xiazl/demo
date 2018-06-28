@@ -1,12 +1,15 @@
 package com.fly.caipiao.analysis.service;
 
 import com.fly.caipiao.analysis.entity.DataLog;
-import com.fly.caipiao.analysis.vo.DateVisitVO;
-import com.fly.caipiao.analysis.vo.VisitVO;
-import com.fly.caipiao.analysis.vo.ResourceVisitVO;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
+import com.fly.caipiao.analysis.vo.DateVisitVO;
+import com.fly.caipiao.analysis.vo.ResourceVisitVO;
+import com.fly.caipiao.analysis.vo.StatisticsVO;
+import com.fly.caipiao.analysis.vo.VisitVO;
+
+import java.util.List;
 
 /**
  * @author baidu
@@ -60,4 +63,27 @@ public interface LogService {
      */
     PageDataResult<VisitVO> listByPlatform(PageBean pageBean, ConditionVO conditionVO);
 
+    /**
+     * 按天统计
+     * @return
+     */
+    List<StatisticsVO> listByPlatAndDate();
+
+    /**
+     * 按月统计
+     * @return
+     */
+    List<StatisticsVO> listByPlatAndMonth();
+
+    /**
+     * 图表显示用
+     * @return
+     */
+    List<String> listYKeys();
+
+    /**
+     * 图表显示用
+     * @return
+     */
+    List<String> listXKeys();
 }

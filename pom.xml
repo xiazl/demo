@@ -114,6 +114,7 @@
     </dependencies>
 
     <build>
+        <finalName>AdminBoard</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

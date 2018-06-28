@@ -3,8 +3,8 @@
 <configuration debug="true">
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <property name="LOG_PATH" value="../logs"/>
-    <property name="LOG_FILE" value="message.log"/>
+    <property name="LOG_PATH" value="/data/logs/download-cdn"/>
+    <property name="LOG_FILE" value="board.log"/>
     <property name="LOG_ERROR_FILE" value="error.log"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
     <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
@@ -39,7 +39,7 @@
         </rollingPolicy>
     </appender>
 
-    <springProfile name="dev,localhost">
+    <springProfile name="localhost">
         <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
             <!--<withJansi>true</withJansi>-->
             <encoder>

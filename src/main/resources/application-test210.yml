@@ -1,6 +1,6 @@
 server:
   servlet:
-    session.timeout: 600s
+#    session.timeout: 600s
     context-path: /
   port: 8070
   tomcat.uri-encoding: UTF-8
@@ -9,12 +9,12 @@ datasource:
   type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
   write:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/lottery_base?useUnicode=true&amp;characterEncoding=utf-8
+    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
     username: caipiao
     password: F%46tff%^#@e
   read:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/lottery_base?useUnicode=true&amp;characterEncoding=utf-8
+    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
     username: caipiao
     password: F%46tff%^#@e
 
@@ -33,11 +33,12 @@ spring:
       pool:
         max-idle: 100
         max-total: 600
-        max-wait: 1ms
+        max-wait: 1000ms
+    timeout: 3000ms
 
 # MyBatis
 mybatis:
-    typeAliasesPackage: com.fly.caipiao.comment.**.entity
+    typeAliasesPackage: com.fly.caipiao.analysis.**.entity
     mapperLocations: classpath*:mapper/**/*.xml
     configuration:
       mapUnderscoreToCamelCase: true
@@ -47,6 +48,9 @@ logging:
   file: logs/analysis.log
   level:
     root: info
-    com.fly.caipiao.comment.service: debug
+    com.fly.caipiao.analysis.mapper: debug
+
+log.data.path: /data/logs/cdn_logs
+
 
 
