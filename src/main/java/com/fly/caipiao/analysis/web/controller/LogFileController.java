@@ -10,7 +10,6 @@ import com.fly.caipiao.analysis.framework.response.ResponseData;
 import com.fly.caipiao.analysis.framework.response.Result;
 import com.fly.caipiao.analysis.service.DataService;
 import com.fly.caipiao.analysis.service.LogFileService;
-import com.fly.caipiao.analysis.service.LogService;
 import com.fly.caipiao.analysis.web.controller.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,8 +34,6 @@ public class LogFileController {
     private LogFileService logFileService;
     @Autowired
     private PathProperties pathProperties;
-    @Autowired
-    private LogService logService;
     @Autowired
     private DataService dataService;
 

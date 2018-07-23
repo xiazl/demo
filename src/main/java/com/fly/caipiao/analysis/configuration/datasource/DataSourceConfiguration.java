@@ -18,6 +18,11 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author baidu
+ * @date 2018/7/12 下午8:29
+ * @description ${TODO}
+ **/
 
 @Configuration
 @EnableTransactionManagement
@@ -40,6 +45,12 @@ public class DataSourceConfiguration {
         return new DataSourceProperties();
     }
 
+    @Bean("phoenixDataSourceProperties")
+    @ConfigurationProperties(prefix = "datasource.phoenix")
+    public DataSourceProperties phoenixDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
     @Primary
     @Bean("writeDataSource")
     public DataSource writeDataSource(
@@ -54,14 +65,23 @@ public class DataSourceConfiguration {
         return readDataSourceProperties.initializeDataSourceBuilder().type(dataSourceType).build();
     }
 
+    @Bean("phoenixDataSource")
+    public DataSource phoenixDataSource(
+            @Qualifier("phoenixDataSourceProperties")
+                    DataSourceProperties phoenixDataSourceProperties) {
+        return phoenixDataSourceProperties.initializeDataSourceBuilder().type(dataSourceType).build();
+    }
+
     @Bean("routingDataSource")
     public DataSource dataSource(
             @Qualifier("writeDataSource") DataSource writeDataSource,
-            @Qualifier("readDataSource") DataSource readDataSource) {
+            @Qualifier("readDataSource") DataSource readDataSource,
+            @Qualifier("phoenixDataSource") DataSource phoenixDataSource) {
         RoutingDataSource proxy = new RoutingDataSource();
-        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+        Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(DataSourceType.write.getType(), writeDataSource);
         targetDataSources.put(DataSourceType.read.getType(), readDataSource);
+        targetDataSources.put(DataSourceType.hbase_phoenix.getType(), phoenixDataSource);
         proxy.setDefaultTargetDataSource(writeDataSource);
         proxy.setTargetDataSources(targetDataSources);
         return proxy;

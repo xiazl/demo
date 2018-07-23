@@ -25,6 +25,11 @@ spring:
       port: 27017
       database: test
 
+    hbase:
+      quorum:
+      root-dir:
+      port:
+
   redis:
     cluster:
         nodes: 172.16.10.210:7001,172.16.10.210:7002,172.16.10.210:7003

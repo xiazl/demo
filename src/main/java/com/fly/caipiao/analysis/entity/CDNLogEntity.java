@@ -81,4 +81,16 @@ public class CDNLogEntity implements Serializable {
     public int hashCode() {
         return Objects.hash(dateTime, ip, referer, targetUrl);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CDNLogEntity{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", dateTime='").append(dateTime).append('\'');
+        sb.append(", ip='").append(ip).append('\'');
+        sb.append(", referer='").append(referer).append('\'');
+        sb.append(", targetUrl='").append(targetUrl).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -4,7 +4,8 @@ import com.fly.caipiao.analysis.configuration.anoutation.TimeConsuming;
 import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.framework.response.ResponseData;
 import com.fly.caipiao.analysis.framework.response.Result;
-import com.fly.caipiao.analysis.service.LogMongoService;
+import com.fly.caipiao.analysis.service.HbaseService;
+import com.fly.caipiao.analysis.service.SparkService;
 import com.fly.caipiao.analysis.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +29,16 @@ public class TestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
     private static final Integer LENGTH = 10000000;
-    private static final Integer SIZE = 20000;
+    private static final Integer SIZE = 50000;
     private static String[] dateStringArray;
     private static final Random random = new Random();
 
     @Autowired
     private TestService testService;
-
     @Autowired
-    private LogMongoService logMongoService;
+    private SparkService sparkService;
+    @Autowired
+    private HbaseService hbaseService;
 
     static {
         List<String> list = new ArrayList<String>();
@@ -73,6 +75,16 @@ public class TestController {
     public Result find(){
         List<CDNLogEntity> list =  testService.find();
         return ResponseData.success(list);
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/aggregation")
+    public Result aggregation(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE,-320);
+        hbaseService.aggregationStatistics(calendar.getTimeInMillis());
+        return ResponseData.success();
     }
 
     @ResponseBody
@@ -115,6 +127,17 @@ public class TestController {
 
         testService.insertBatch(list);
 
+        return ResponseData.success();
+    }
+
+    /**
+     * spark写入测试
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/save")
+    public Result save(){
+        sparkService.load();
         return ResponseData.success();
     }
 

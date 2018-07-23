@@ -1,13 +1,15 @@
 package com.fly.caipiao.analysis.web.controller;
 
 import com.fly.caipiao.analysis.common.utils.DateUtils;
-import com.fly.caipiao.analysis.entity.CDNLogEntity;
+import com.fly.caipiao.analysis.entity.ResourcePlatformStatistics;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.framework.response.ResponseData;
 import com.fly.caipiao.analysis.framework.response.Result;
-import com.fly.caipiao.analysis.service.LogService;
+import com.fly.caipiao.analysis.service.HbaseService;
+import com.fly.caipiao.analysis.service.MongoReadService;
+import com.fly.caipiao.analysis.service.PhoenixService;
 import com.fly.caipiao.analysis.vo.DateVisitVO;
 import com.fly.caipiao.analysis.vo.EChartVO;
 import com.fly.caipiao.analysis.vo.StatisticsVO;
@@ -29,13 +31,20 @@ import java.util.*;
 @Controller
 @RequestMapping("/log")
 public class LogController {
+    private static final String PV_COLLECTION_NAME = "pv";
+    private static final String UV_COLLECTION_NAME = "uv";
+    private static final String[]ykeys = {"PV","UV"};
 
     @Autowired
-    private LogService logService;
+    private MongoReadService mongoReadService;
+    @Autowired
+    private HbaseService hbaseService;
+    @Autowired
+    private PhoenixService phoenixService;
 
     @RequestMapping("/index")
     public String index() {
-        return "log";
+        return "log_detail";
     }
 
     @RequestMapping("/indexPv")
@@ -67,14 +76,14 @@ public class LogController {
     @RequestMapping("/resourceDetail")
     public String indexResource(Model model,String name) {
         model.addAttribute("name",name);
-        return "log_resource_detail";
+        return "log_platform_detail";
     }
 
     @RequestMapping("/platformDetail")
     public String indexPlatform(Model model,String name)
     {
         model.addAttribute("name",name);
-        return "log_platform_detail";
+        return "log_resource_detail";
     }
 
     @RequestMapping("/indexUser")
@@ -84,39 +93,51 @@ public class LogController {
 
     @ResponseBody
     @RequestMapping("/list")
-    public PageDataResult<CDNLogEntity> list(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.list(pageBean,conditionVO);
+    public PageDataResult<ResourcePlatformStatistics> list(PageBean pageBean, ConditionVO conditionVO) {
+        return mongoReadService.list(pageBean,conditionVO);
     }
 
 
     @ResponseBody
     @RequestMapping("/listPv")
     public PageDataResult<VisitVO> listPv(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.listByPv(pageBean,conditionVO);
+        return mongoReadService.listByPv(pageBean,conditionVO);
     }
 
     @ResponseBody
     @RequestMapping("/listUv")
     public PageDataResult<VisitVO> listUv(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.listByUv(pageBean,conditionVO);
+        return mongoReadService.listByUv(pageBean,conditionVO);
     }
 
     @ResponseBody
     @RequestMapping("/listDate")
     public PageDataResult<DateVisitVO> listByDate(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.listByDate(pageBean,conditionVO);
+        return mongoReadService.listByDate(pageBean,conditionVO);
     }
 
     @ResponseBody
     @RequestMapping("/listResource")
     public PageDataResult<VisitVO> listByResource(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.listByResource(pageBean,conditionVO);
+        return mongoReadService.listByResource(pageBean,conditionVO);
+    }
+
+    @ResponseBody
+    @RequestMapping("/listResourceDetail")
+    public PageDataResult<VisitVO> listResourceDetail(PageBean pageBean, ConditionVO conditionVO) {
+        return mongoReadService.listByResourceDetail(pageBean,conditionVO);
     }
 
     @ResponseBody
     @RequestMapping("/listPlatform")
     public PageDataResult<VisitVO> listByPlatform(PageBean pageBean, ConditionVO conditionVO) {
-        return logService.listByPlatform(pageBean,conditionVO);
+        return mongoReadService.listByPlatform(pageBean,conditionVO);
+    }
+
+    @ResponseBody
+    @RequestMapping("/listPlatformDetail")
+    public PageDataResult<VisitVO> listPlatformDetail(PageBean pageBean, ConditionVO conditionVO) {
+        return mongoReadService.listByPlatformDetail(pageBean,conditionVO);
     }
 
     @ResponseBody
@@ -126,14 +147,20 @@ public class LogController {
         calendar.add(Calendar.MONTH,-1);
         List<String> xkeys = DateUtils.getListDay(calendar.getTime(),new Date());
         int length = xkeys.size();
-        List<StatisticsVO> list = logService.listByPlatAndDate(xkeys.get(0),xkeys.get(length-1));
+        List<StatisticsVO> pvList = mongoReadService.listByDate(xkeys.get(0),xkeys.get(length-1),PV_COLLECTION_NAME);
+
+        List<StatisticsVO> uvList = mongoReadService.listByDate(xkeys.get(0),xkeys.get(length-1),UV_COLLECTION_NAME);
+
+        List<StatisticsVO> list = new ArrayList<>();
+        list.addAll(pvList);
+        list.addAll(uvList);
 
         Map<String,Object> map = new HashMap<>();
         for(StatisticsVO vo : list){
-            map.put(vo.getTime()+vo.getName(),vo.getCount());
+            for(String ykey: ykeys) {
+                map.put(vo.getTime() + ykey, vo.getCount());
+            }
         }
-
-        List<String> ykeys = logService.listYKeys();
 
         EChartVO chartVO = new EChartVO();
         List<Map> mapList = new ArrayList<>();
@@ -152,7 +179,8 @@ public class LogController {
 
         List<String> keys = new ArrayList<>();
         keys.add("time");
-        keys.addAll(ykeys);
+
+        keys.addAll(Arrays.asList(ykeys));
 
         chartVO.setData(mapList);
         chartVO.setKeys(keys);
@@ -166,13 +194,20 @@ public class LogController {
         calendar.add(Calendar.YEAR,-1);
         List<String> xkeys = DateUtils.getListMonth(calendar.getTime(),new Date());
         int length = xkeys.size();
-        List<StatisticsVO> list = logService.listByPlatAndMonth(xkeys.get(0),xkeys.get(length-1));
-        Map<String,Object> map = new HashMap<>();
-        for(StatisticsVO vo : list){
-            map.put(vo.getTime()+vo.getName(),vo.getCount());
-        }
+        List<StatisticsVO> pvList = mongoReadService.listByMonth(xkeys.get(0),xkeys.get(length-1),PV_COLLECTION_NAME);
 
-        List<String> ykeys = logService.listYKeys();
+        List<StatisticsVO> uvList = mongoReadService.listByMonth(xkeys.get(0),xkeys.get(length-1),UV_COLLECTION_NAME);
+
+        List<StatisticsVO> list = new ArrayList<>();
+        list.addAll(pvList);
+        list.addAll(uvList);
+
+        Map<String,Object> map = new HashMap<>();
+        for(StatisticsVO vo : pvList){
+            for(String ykey: ykeys) {
+                map.put(vo.getTime() + ykey, vo.getCount());
+            }
+        }
 
         EChartVO chartVO = new EChartVO();
         List<Map> mapList = new ArrayList<>();
@@ -191,7 +226,7 @@ public class LogController {
 
         List<String> keys = new ArrayList<>();
         keys.add("time");
-        keys.addAll(ykeys);
+        keys.addAll(Arrays.asList(ykeys));
 
         chartVO.setData(mapList);
         chartVO.setKeys(keys);

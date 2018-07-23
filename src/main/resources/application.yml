@@ -25,6 +25,14 @@ spring:
       port: 27017
       database: test
       password: 1234qwer
+
+    hbase:
+      quorum: my.test.hbase
+      root-dir:
+      port:
+
+
+
 #    cassandra:
 #      contact-points: 127.0.0.1
 #      port: 9042
@@ -43,6 +51,10 @@ datasource:
     url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
     username: caipiao
     password: F%46tff%^#@e
+  phoenix:
+    driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
+    url: jdbc:phoenix:my.test.hbase
+
 
 # MyBatis
 mybatis:
@@ -50,8 +62,9 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*.xml
     configuration:
       mapUnderscoreToCamelCase: true
-#spark:
-#  master: spark://master:7077
+
+spark:
+  master: spark://admindeMBP.lan:7077
 
 
 

@@ -18,7 +18,7 @@ $().ready(function() {
                     { "name": "keyword", "value": $("input[name='search']").val()}
                 );
             },
-            "sAjaxSource": "/log/listPlatform", // 通过ajax加载数据
+            "sAjaxSource": "/log/listPlatformDetail", // 通过ajax加载数据
             "fnServerData" : function(sSource, aDataSet, fnCallback) {
                 $.ajax({
                     "dataType" : 'json',

@@ -1,6 +1,12 @@
 package com.fly.caipiao.analysis.configuration.datasource;
 
 
+/**
+ * @author baidu
+ * @date 2018/7/12 下午8:33
+ * @description ${TODO}
+ **/
+
 public class DataSourceContextHolder {
     private static final ThreadLocal<String> LOCAL = new ThreadLocal<String>();
 

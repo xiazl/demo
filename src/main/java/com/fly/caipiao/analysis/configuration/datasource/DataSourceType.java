@@ -1,8 +1,17 @@
 package com.fly.caipiao.analysis.configuration.datasource;
 
 
+/**
+ * @author baidu
+ * @date 2018/7/12 下午8:17
+ * @description ${TODO}
+ **/
+
 public enum DataSourceType {
-    read("read", "从库"), write("write", "主库");
+    read("read", "从库"),
+    write("write", "主库"),
+    hbase_phoenix("phoenix", "hbase库");
+
     private String type;
     private String name;
 

@@ -119,4 +119,17 @@ BEGIN;
 INSERT INTO `user_role` VALUES ('1', '1', '1', '0', '2018-06-26 15:28:13', '2018-06-26 15:28:18'), ('2', '2', '2', '0', '2018-06-26 16:29:27', '2018-06-26 16:29:27'), ('3', '3', '1', '0', '2018-06-26 16:30:01', '2018-06-26 16:30:01');
 COMMIT;
 
+-- ----------------------------
+--  Table structure for `error_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `error_record`;
+CREATE TABLE `error_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL,
+  `time` bigint(20) DEFAULT NULL,
+  `status` tinyint(2) DEFAULT '0' COMMENT '0 未处理；1 已处理',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SET FOREIGN_KEY_CHECKS = 1;

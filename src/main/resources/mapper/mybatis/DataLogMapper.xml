@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.DataLogMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.DataLog" >
+       <id column="id" property="id" />
+       <result column="ip" property="ip"/>
+       <result column="referer" property="referer"/>
+       <result column="target_url" property="targetUrl"/>
+       <result column="date_time" property="dateTime"/>
+   </resultMap>
+
+    <insert id="insert">
+        insert into data_log(ip,referer,target_url,date_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.ip},#{item.referer},#{item.targetUrl},#{item.dateTime})
+        </foreach>
+    </insert>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.DataLog">
+        select *
+        from data_log where 1 = 1
+        <if test="sSearch!=null and sSearch.length > 0">
+           and ip like concat('%',#{sSearch},'%')
+        </if>
+    </select>
+
+    <select id="listByPv" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count'
+        from data_log group by target_url order by `count` desc
+    </select>
+
+    <select id="listByUv" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count' from (
+        select target_url ,ip
+        from data_log group by target_url,ip ) temp group by target_url order by `count` desc
+    </select>
+
+    <select id="listByDate" resultType="com.fly.caipiao.analysis.vo.DateVisitVO">
+        select date(date_time) as 'date',count(1) as 'count'
+        from data_log group by date(date_time) order by `count` desc
+    </select>
+
+    <select id="listByResource" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count'
+        from data_log where 1=1
+        <if test="sSearch!=null and sSearch.length() > 0">
+            and target_url = like concat('%',#{sSearch},'%')
+        </if>
+        <if test="keyword!=null and keyword.length() > 0">
+            and referer like concat('%',#{keyword},'%')
+        </if>
+        group by `name` order by `count` desc
+    </select>
+
+    <select id="listByPlatform" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select referer as name,count(1) as 'count'
+        from data_log where 1=1
+        <if test="sSearch!=null and sSearch.length() > 0">
+            and referer like concat('%',#{sSearch},'%')
+        </if>
+        <if test="keyword!=null and keyword.length() > 0">
+            and target_url like concat('%',#{keyword},'%')
+        </if>
+        group by `name` order by `count` desc
+    </select>
+
+    <select id="listByPlatAndDate" resultType="com.fly.caipiao.analysis.vo.StatisticsVO">
+        select target_url as 'name',date(date_time) as 'time',count(1) as 'count'
+        from data_log group by target_url,`time` order by `count` desc
+    </select>
+
+    <select id="listByPlatAndMonth" resultType="com.fly.caipiao.analysis.vo.StatisticsVO">
+        select target_url as 'name',date_format(date_time,'%Y-%m') as 'time',count(1) as 'count'
+        from data_log group by target_url,`time` order by `count` desc
+    </select>
+
+    <select id="listYKeys" resultType="java.lang.String">
+        select target_url from (
+          select target_url,count(1) as 'count' from data_log group by target_url order by `count`
+        ) temp
+    </select>
+
+</mapper>

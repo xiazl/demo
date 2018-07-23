@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.RecordMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.Record" >
+       <id column="id" property="id" />
+       <result column="url" property="url"/>
+       <result column="type" property="type"/>
+       <result column="create_time" property="createTime"/>
+   </resultMap>
+
+    <insert id="insert">
+        insert into `record` (url,`type`)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.url},#{item.type})
+        </foreach>
+    </insert>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.Record">
+        select id,url,create_time
+        from `record` where 1 =1
+        <if test="type!=null">
+            and type = #{type}
+        </if>
+        <if test="condition.sSearch!=null and condition.sSearch.length() > 0" >
+            and url like concat('%',#{sSearch},'%')
+        </if>
+    </select>
+
+    <select id="queryRepeat" resultType="java.lang.String">
+        select url from record where `type` = #{type}
+        and url in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

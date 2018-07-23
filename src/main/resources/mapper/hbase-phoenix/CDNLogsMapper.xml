@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.CDNLogsMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.DataLog" >
+       <id column="id" property="id" />
+       <result column="ip" property="ip"/>
+       <result column="referer" property="referer"/>
+       <result column="target_url" property="targetUrl"/>
+       <result column="date_time" property="dateTime"/>
+   </resultMap>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.CDNLogEntity">
+        select ip,date_time,referer,target_url
+        from "cdn_logs" where 1 = 1
+        <if test="rowKey != null">
+            id &gt;= #{rowKey}
+        </if>
+    </select>
+
+    <select id="aggregationPv" resultType="com.fly.caipiao.analysis.entity.PvStatistics">
+        select target_url,substr(date_time,0,10) as date,count(1) as count
+        from "cdn_logs" where 1 = 1
+        <if test="time!=null> 0">
+           and create_time &gt;= #{time}
+        </if>
+        group by target_url,date order by count desc
+    </select>
+
+    <select id="aggregationUv" resultType="com.fly.caipiao.analysis.entity.UvStatistics">
+        select target_url,dt as date,count(1) as count from (
+        select target_url ,ip,substr(date_time,0,10) as dt
+        from "cdn_logs" where 1 = 1
+        <if test="time!=null">
+            and create_time &gt;= #{time}
+        </if>
+        group by target_url,ip,dt) temp group by target_url,date order by count desc
+    </select>
+
+    <select id="aggregationPlatform" resultType="com.fly.caipiao.analysis.entity.PlatformStatistics">
+        select referer,substr(date_time,0,10) as date,count(1) as count
+        from "cdn_logs" where 1=1
+        <if test="time!=null">
+            and create_time &gt;= #{time}
+        </if>
+        group by referer,date order by count desc
+    </select>
+
+    <select id="aggregationResource" resultType="com.fly.caipiao.analysis.entity.ResourceStatistics">
+        select target_url,substr(date_time,0,10) as date,count(1) as count
+        from "cdn_logs" where 1=1
+        <if test="time!=null">
+            and create_time &gt;= #{time}
+        </if>
+        group by target_url,date order by count desc
+    </select>
+
+    <select id="aggregationResourcePlatform" resultType="com.fly.caipiao.analysis.entity.ResourcePlatformStatistics">
+        select target_url,referer,substr(date_time,0,10) as date,count(1) as count
+        from "cdn_logs" where 1=1
+        <if test="time!=null">
+            and create_time &gt;= #{time}
+        </if>
+        group by target_url,referer,date order by count desc
+    </select>
+
+</mapper>

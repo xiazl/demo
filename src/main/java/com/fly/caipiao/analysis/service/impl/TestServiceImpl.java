@@ -1,7 +1,7 @@
 package com.fly.caipiao.analysis.service.impl;
 
 import com.fly.caipiao.analysis.entity.CDNLogEntity;
-import com.fly.caipiao.analysis.mapper.UserMapper;
+import com.fly.caipiao.analysis.service.HbaseService;
 import com.fly.caipiao.analysis.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,7 +24,7 @@ public class TestServiceImpl implements TestService {
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
-    private UserMapper userMapper;
+    private HbaseService hbaseService;
 
     @Override
     public List find() {
@@ -47,7 +47,8 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public void insertBatch(List<CDNLogEntity> entities) {
-        mongoTemplate.insert(entities,CDNLogEntity.class);
+        hbaseService.insertBatch(entities);
+//        mongoTemplate.insert(entities,CDNLogEntity.class);
     }
 
     @Override

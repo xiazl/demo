@@ -6,11 +6,11 @@ import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.entity.LogFile;
 import com.fly.caipiao.analysis.entity.Record;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
-import com.fly.caipiao.analysis.mapper.DataLogMapper;
 import com.fly.caipiao.analysis.mapper.LogFileMapper;
 import com.fly.caipiao.analysis.mapper.RecordMapper;
 import com.fly.caipiao.analysis.service.DataService;
-import com.fly.caipiao.analysis.service.LogMongoService;
+import com.fly.caipiao.analysis.service.HbaseService;
+import com.fly.caipiao.analysis.service.PhoenixService;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -41,19 +41,22 @@ public class DataServiceImpl implements DataService {
     private static final Integer BATCH_SIZE = 20000;
 
     @Autowired
-    private LogMongoService logMongoService;
-    @Autowired
     private RecordMapper recordMapper;
     @Autowired
-    private DataLogMapper dataLogMapper;
+    private HbaseService hbaseService;
     @Autowired
     private LogFileMapper logFileMapper;
+    @Autowired
+    private PhoenixService phoenixService;
 
     @Override
     @TimeConsuming("数据解析并保存")
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public void analysis(String name) {
         this.saveLogFile(name);
+
+        // 记录当前时间戳
+        Long timeMillis = new Date().getTime();
 
         String regexDate  = "([^\\[\\]]+\\])\\s";
 //        String regexDate  = "([^\\[\\]]+)\\s";
@@ -67,6 +70,7 @@ public class DataServiceImpl implements DataService {
                 patternTarget = Pattern.compile(regexHttp);
         Matcher matcher;
         FileInputStream inputStream;
+
         Scanner sc = null;
         try {
             File file = ResourceUtils.getFile(name);
@@ -81,7 +85,9 @@ public class DataServiceImpl implements DataService {
             int i = 0;
             while (sc.hasNextLine()) {
                 if(i == BATCH_SIZE){
-                    logMongoService.insertBatch(list,ids);
+//                    logMongoService.insertBatch(list,ids);
+                    hbaseService.insertBatch(list);
+
                     i = 0;
                     list = new ArrayList<>();
                     ids = new ArrayList<>();
@@ -113,6 +119,7 @@ public class DataServiceImpl implements DataService {
                     targetSet.add(target);
                 }
 
+                entity.setId();
                 ids.add(entity.getId());
                 list.add(entity);
                 i++;
@@ -120,10 +127,14 @@ public class DataServiceImpl implements DataService {
             sc.close();
 
             if(i > 0){
-                logMongoService.insertBatch(list,ids);
+//                logMongoService.insertBatch(list,ids);
+                hbaseService.insertBatch(list);
+
             }
 
             this.saveRecord(refererSet,targetSet);
+
+            hbaseService.aggregationStatistics(timeMillis);
 
         } catch (FileNotFoundException e) {
             sc.close();
