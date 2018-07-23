@@ -34,7 +34,7 @@ public interface TestService {
      * 批量插入
      * @param entities
      */
-    void insertBatch(List<CDNLogEntity> entities);
+    void insertBatch(List<CDNLogEntity> entities,Long timeMillis);
 
     /**
      * 清空集合数据

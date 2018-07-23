@@ -46,8 +46,8 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void insertBatch(List<CDNLogEntity> entities) {
-        hbaseService.insertBatch(entities);
+    public void insertBatch(List<CDNLogEntity> entities,Long timeMillis) {
+        hbaseService.insertBatch(entities,timeMillis);
 //        mongoTemplate.insert(entities,CDNLogEntity.class);
     }
 

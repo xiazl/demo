@@ -104,10 +104,12 @@ public class TestController {
         }
         List<CDNLogEntity> list = new ArrayList<>();
         List<String> ids = new ArrayList<>();
+        Long timeMillis = new Date().getTime();
+
         for(int i = 1;i <= length;i++) {
             if(i % SIZE == 0) {
                 long startTime = System.currentTimeMillis();
-                testService.insertBatch(list);
+                testService.insertBatch(list,timeMillis);
                 long endTime = System.currentTimeMillis();
                 System.out.println(SIZE+"条耗时："+String.valueOf(endTime - startTime));
 
@@ -125,7 +127,7 @@ public class TestController {
             list.add(entity);
         }
 
-        testService.insertBatch(list);
+        testService.insertBatch(list,timeMillis);
 
         return ResponseData.success();
     }
