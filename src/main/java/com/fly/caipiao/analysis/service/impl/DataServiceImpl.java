@@ -2,7 +2,7 @@ package com.fly.caipiao.analysis.service.impl;
 
 import com.fly.caipiao.analysis.common.enums.RecordTypeEnum;
 import com.fly.caipiao.analysis.configuration.anoutation.TimeConsuming;
-import com.fly.caipiao.analysis.entity.DataLog;
+import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.entity.LogFile;
 import com.fly.caipiao.analysis.entity.Record;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
@@ -11,6 +11,7 @@ import com.fly.caipiao.analysis.mapper.LogFileMapper;
 import com.fly.caipiao.analysis.mapper.RecordMapper;
 import com.fly.caipiao.analysis.service.DataService;
 import com.fly.caipiao.analysis.service.LogMongoService;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ import java.util.regex.Pattern;
 @Service("dataService")
 public class DataServiceImpl implements DataService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataServiceImpl.class);
-    private static final Integer BATCH_SIZE = 100000;
+    private static final Integer BATCH_SIZE = 20000;
 
     @Autowired
     private LogMongoService logMongoService;
@@ -72,25 +73,28 @@ public class DataServiceImpl implements DataService {
             inputStream = new FileInputStream(file.getPath());
             sc = new Scanner(inputStream, "UTF-8");
             String str;
-            List<DataLog> list = new ArrayList<>();
+            List<CDNLogEntity> list = new ArrayList<>();
+            List<String> ids = new ArrayList<>();
             Set<String> refererSet = new HashSet<>();
-            Set<String> targerSet = new HashSet<>();
+            Set<String> targetSet = new HashSet<>();
             String referer,target;
             int i = 0;
             while (sc.hasNextLine()) {
                 if(i == BATCH_SIZE){
-//                    logMongoService.insertBatch(list);
-                    dataLogMapper.insert(list);
+                    logMongoService.insertBatch(list,ids);
                     i = 0;
                     list = new ArrayList<>();
+                    ids = new ArrayList<>();
                 }
                 str = sc.nextLine();
-                DataLog entity = new DataLog();
+                CDNLogEntity entity = new CDNLogEntity();
                 matcher = patternDate.matcher(str);
                 if(matcher.find()){
                     String time = matcher.group();
                     time = time.substring(0,time.length()-2);
-                    entity.setDateTime(DateUtils.parseDate(time,Locale.US,"d/MMM/YYYY:H:m:s Z"));
+                    Date date = DateUtils.parseDate(time,Locale.US,"d/MMM/YYYY:H:m:s Z");
+                    entity.setDateTime(DateFormatUtils.format(date,"yyyy-MM-dd HH:hh:ss",
+                            TimeZone.getTimeZone("GMT+8"),Locale.US));
                 }
                 matcher = patternIp.matcher(str);
                 if(matcher.find()){
@@ -106,26 +110,28 @@ public class DataServiceImpl implements DataService {
                 if(matcher.find()){
                     target = matcher.group().substring(1).split("\\?")[0];
                     entity.setTargetUrl(target);
-                    targerSet.add(target);
+                    targetSet.add(target);
                 }
+
+                ids.add(entity.getId());
                 list.add(entity);
                 i++;
             }
+            sc.close();
+
             if(i > 0){
-//                logMongoService.insertBatch(list);
-                dataLogMapper.insert(list);
+                logMongoService.insertBatch(list,ids);
             }
 
-            this.saveRecord(refererSet,targerSet);
+            this.saveRecord(refererSet,targetSet);
 
         } catch (FileNotFoundException e) {
+            sc.close();
             LOGGER.error("数据解析异常"+e.getMessage(),e);
             throw new AppException("未找到文件路径");
         } catch (ParseException e) {
             LOGGER.error("数据解析异常"+e.getMessage(),e);
             throw new AppException(e.getMessage(),e);
-        } finally {
-            sc.close();
         }
 
     }

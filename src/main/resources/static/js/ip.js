@@ -1,4 +1,4 @@
-var table = $('#logTable').DataTable(
+var table = $('#pvLogTable').DataTable(
     {
         "bPaginate" : true,
         "bStateSave" : true,
@@ -11,19 +11,14 @@ var table = $('#logTable').DataTable(
         "bDestroy" : true,
         "bProcessing" : true,
         "bServerSide" : true,         // 服务器处理分页
-        "sAjaxSource" : "/log/list", // 通过ajax加载数据
+        "sAjaxSource" : "/log/listPv", // 通过ajax加载数据
         "aoColumns" : [
             {
-                "mDataProp" : "dateTime"
+                "mDataProp" : "targetUrl",
+                "sClass" : "center"
             },
             {
-                "mDataProp" : "ip"
-            },
-            {
-                "mDataProp" : "referer"
-            },
-            {
-                "mDataProp" : "targetUrl"
+                "mDataProp" : "count"
             }],
         "oLanguage" : { // 中文替换
             "sProcessing" : "处理中...",

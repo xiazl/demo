@@ -91,6 +91,7 @@ $().ready(function () {
         }
     }
 
+    // 操作列点击事件
     $('#userTable tbody').on('click', 'a.glyphicon', function (args) {
         var dataObj = table.row($(this).parents('tr')).data();
         var data  = {id: dataObj.id};

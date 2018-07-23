@@ -1,11 +1,10 @@
 package com.fly.caipiao.analysis.service;
 
-import com.fly.caipiao.analysis.entity.DataLog;
+import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.vo.DateVisitVO;
-import com.fly.caipiao.analysis.vo.ResourceVisitVO;
 import com.fly.caipiao.analysis.vo.StatisticsVO;
 import com.fly.caipiao.analysis.vo.VisitVO;
 
@@ -21,7 +20,7 @@ public interface LogService {
      * 日志查询
      * @return
      */
-    PageDataResult<DataLog> list(PageBean pageBean,ConditionVO conditionVO);
+    PageDataResult<CDNLogEntity> list(PageBean pageBean, ConditionVO conditionVO);
 
     /**
      * 按照PV统计
@@ -53,7 +52,7 @@ public interface LogService {
      * @param conditionVO
      * @return
      */
-    PageDataResult<ResourceVisitVO> listByResource(PageBean pageBean, ConditionVO conditionVO);
+    PageDataResult<VisitVO> listByResource(PageBean pageBean, ConditionVO conditionVO);
 
     /**
      * 按来源平台统计
@@ -64,16 +63,16 @@ public interface LogService {
     PageDataResult<VisitVO> listByPlatform(PageBean pageBean, ConditionVO conditionVO);
 
     /**
-     * 按天统计
+     * 按天统计(最近30天)
      * @return
      */
-    List<StatisticsVO> listByPlatAndDate();
+    List<StatisticsVO> listByPlatAndDate(String startDate, String endDate);
 
     /**
-     * 按月统计
+     * 按月统计(最近一年)
      * @return
      */
-    List<StatisticsVO> listByPlatAndMonth();
+    List<StatisticsVO> listByPlatAndMonth(String startMonth, String endMonth);
 
     /**
      * 图表显示用
@@ -81,9 +80,4 @@ public interface LogService {
      */
     List<String> listYKeys();
 
-    /**
-     * 图表显示用
-     * @return
-     */
-    List<String> listXKeys();
 }

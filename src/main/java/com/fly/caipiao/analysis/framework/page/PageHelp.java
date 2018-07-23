@@ -3,7 +3,6 @@ package com.fly.caipiao.analysis.framework.page;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *  分页返回参数封装
@@ -11,16 +10,36 @@ import java.util.Map;
  * @author baidu
  */
 public class PageHelp {
+
+	/**
+	 * mysql 分页返回
+	 * @param data
+	 * @param <T>
+	 * @return
+	 */
 	public final static <T> PageDataResult<T> getDataResult(List<T> data) {
-		return getDataResult(data, null);
-	}
-	public final static <T> PageDataResult<T> getDataResult(List<T> data, Map filter) {
 		PageDataResult<T> dataResult = new PageDataResult<>();
 		dataResult.setData(data);
 
 		PageInfo<T> page = new PageInfo<T>(data);
 		dataResult.setiTotalRecords(page.getTotal());
-        dataResult.setiTotalDisplayRecords(page.getTotal());
+		dataResult.setiTotalDisplayRecords(page.getTotal());
+		return dataResult;
+	}
+
+	/**
+	 * mongo 分页返回
+	 * @param data
+	 * @param size
+	 * @param <T>
+	 * @return
+	 */
+	public final static <T> PageDataResult<T> getDataResult(List<T> data, Long size) {
+		PageDataResult<T> dataResult = new PageDataResult<>();
+		dataResult.setData(data);
+
+		dataResult.setiTotalRecords(size);
+        dataResult.setiTotalDisplayRecords(size);
 		return dataResult;
 	}
 

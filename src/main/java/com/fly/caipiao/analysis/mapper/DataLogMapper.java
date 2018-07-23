@@ -1,11 +1,10 @@
 package com.fly.caipiao.analysis.mapper;
 
 import com.fly.caipiao.analysis.entity.DataLog;
+import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.vo.DateVisitVO;
 import com.fly.caipiao.analysis.vo.StatisticsVO;
 import com.fly.caipiao.analysis.vo.VisitVO;
-import com.fly.caipiao.analysis.vo.ResourceVisitVO;
-import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public interface DataLogMapper {
      * @param conditionVO
      * @return
      */
-    List<ResourceVisitVO> listByResource(ConditionVO conditionVO);
+    List<VisitVO> listByResource(ConditionVO conditionVO);
 
     /**
      * 按来源平台列表查询
@@ -70,7 +69,7 @@ public interface DataLogMapper {
     List<VisitVO> listByPlatform(ConditionVO conditionVO);
     
     /**
-     * 按天统计
+     * 按天统计(最近30天)
      * @param
      * @return
      */
@@ -90,10 +89,4 @@ public interface DataLogMapper {
      */
     List<String> listYKeys();
 
-    /**
-     * 图表显示key值
-     * @param
-     * @return
-     */
-    List<String> listXKeys();
 }

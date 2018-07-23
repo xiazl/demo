@@ -8,6 +8,7 @@ package com.fly.caipiao.analysis.framework.page;
 public class ConditionVO {
     // 搜索框查询
     private String sSearch;
+    private String keyword;
 
     public String getsSearch() {
         return sSearch;
@@ -15,5 +16,13 @@ public class ConditionVO {
 
     public void setsSearch(String sSearch) {
         this.sSearch = sSearch;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

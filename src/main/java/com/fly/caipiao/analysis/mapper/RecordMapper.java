@@ -29,14 +29,14 @@ public interface RecordMapper {
      * @param type
      * @return
      */
-    List<String> queryRepeat(@Param("list") Set<String> list, @Param("type")Integer type);
+    List<String> queryRepeat(@Param("list") Set<String> list, @Param("type") Integer type);
 
     /**
      * 推广记录列表查询
      * @param conditionVO
      * @return
      */
-    List<Record> list(@Param("condition")ConditionVO conditionVO, @Param("type")Integer type);
+    List<Record> list(@Param("condition") ConditionVO conditionVO, @Param("type") Integer type);
 
 
 }

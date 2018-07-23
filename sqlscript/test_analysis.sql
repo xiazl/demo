@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : utf-8
 
- Date: 06/27/2018 18:07:43 PM
+ Date: 07/06/2018 20:58:01 PM
 */
 
 SET NAMES utf8;
@@ -28,7 +28,7 @@ CREATE TABLE `data_log` (
   `target_url` varchar(150) DEFAULT NULL,
   `date_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1037 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `log_file`
@@ -40,7 +40,7 @@ CREATE TABLE `log_file` (
   `size` int(11) DEFAULT NULL COMMENT '文件大小',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='日志文件分析记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件分析记录';
 
 -- ----------------------------
 --  Table structure for `record`
@@ -52,7 +52,7 @@ CREATE TABLE `record` (
   `type` tinyint(2) DEFAULT NULL COMMENT '类型 1 资源地址 2 来源平台地址',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='推广纪录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广纪录表';
 
 -- ----------------------------
 --  Table structure for `role`
@@ -70,6 +70,13 @@ CREATE TABLE `role` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
+--  Records of `role`
+-- ----------------------------
+BEGIN;
+INSERT INTO `role` VALUES ('1', 'ROLE_ADMIN', '1', '管理员', '0', '2018-06-26 16:02:28', '2018-06-26 16:02:28'), ('2', 'ROLE_USER', '2', '普通用户', '0', '2018-06-26 16:02:28', '2018-06-26 16:02:28');
+COMMIT;
+
+-- ----------------------------
 --  Table structure for `user`
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -85,6 +92,13 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
+--  Records of `user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `user` VALUES ('1', 'baidu', '$2a$10$eM2bx5atIGnDQ7FLI8xoM.kE45KP0WjCEP8mu2eHhboDSJXR3I91O', null, '0', '2018-06-26 15:29:01', '2018-06-26 15:29:04'), ('2', 'test001', '$2a$10$OXPIkaujC73/HmJKNFHAxe6HgIGENKdHDDO1mSYn8WfbQAIDFrYIy', '', '0', '2018-06-26 15:29:30', '2018-06-26 16:29:27'), ('3', 'test002', '$2a$10$Edup9NtHJ8QcGDgMVqqXiOX7wDWtTIAnTtrY7/n1Yf8LbIYHS3ILK', '', '0', '2018-06-26 15:30:05', '2018-06-26 16:30:01');
+COMMIT;
+
+-- ----------------------------
 --  Table structure for `user_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
@@ -97,5 +111,12 @@ CREATE TABLE `user_role` (
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户权限表';
+
+-- ----------------------------
+--  Records of `user_role`
+-- ----------------------------
+BEGIN;
+INSERT INTO `user_role` VALUES ('1', '1', '1', '0', '2018-06-26 15:28:13', '2018-06-26 15:28:18'), ('2', '2', '2', '0', '2018-06-26 16:29:27', '2018-06-26 16:29:27'), ('3', '3', '1', '0', '2018-06-26 16:30:01', '2018-06-26 16:30:01');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

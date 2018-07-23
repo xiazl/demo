@@ -11,38 +11,38 @@ public class PageBean {
     /**
      * current page number
      */
-    private int current = 1;
+    private Integer current = 1;
     /**
      * start  number
      */
-    private int iDisplayStart = 0;
+    private Long iDisplayStart = 0L;
 
     /**
      * number of data items per page
      */
-    private int iDisplayLength = 50;
+    private Integer iDisplayLength = 50;
 
-    public int getCurrent() {
-        return iDisplayStart/iDisplayLength+1;
+    public Integer getCurrent() {
+        return (int)(iDisplayStart/iDisplayLength+1);
     }
 
-    public void setCurrent(int current) {
+    public void setCurrent(Integer current) {
         this.current = current;
     }
 
-    public int getiDisplayStart() {
+    public Long getiDisplayStart() {
         return iDisplayStart;
     }
 
-    public void setiDisplayStart(int iDisplayStart) {
+    public void setiDisplayStart(Long iDisplayStart) {
         this.iDisplayStart = iDisplayStart;
     }
 
-    public int getiDisplayLength() {
+    public Integer getiDisplayLength() {
         return iDisplayLength;
     }
 
-    public void setiDisplayLength(int iDisplayLength) {
+    public void setiDisplayLength(Integer iDisplayLength) {
         this.iDisplayLength = iDisplayLength;
     }
 

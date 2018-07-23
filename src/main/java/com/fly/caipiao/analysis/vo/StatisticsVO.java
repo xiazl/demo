@@ -8,7 +8,7 @@ package com.fly.caipiao.analysis.vo;
 public class StatisticsVO {
     private String name;
     private String time;
-    private String count;
+    private Integer count;
 
     public String getName() {
         return name;
@@ -26,11 +26,11 @@ public class StatisticsVO {
         this.time = time;
     }
 
-    public String getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 }

@@ -9,12 +9,12 @@ datasource:
   type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
   write:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+    url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
     username: caipiao
     password: F%46tff%^#@e
   read:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+    url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
     username: caipiao
     password: F%46tff%^#@e
 
@@ -24,7 +24,7 @@ spring:
       host: 127.0.0.1
       port: 27017
       database: test
-      password: 1234qwer
+
   redis:
     cluster:
         nodes: 172.16.10.210:7001,172.16.10.210:7002,172.16.10.210:7003

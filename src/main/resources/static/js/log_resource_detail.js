@@ -1,6 +1,5 @@
 $().ready(function() {
-
-    var table = $('#resourceLogTable').DataTable(
+    var table = $('#resourceDetail').DataTable(
         {
             "bPaginate": true,
             "bStateSave": true,
@@ -13,7 +12,23 @@ $().ready(function() {
             "bDestroy": true,
             "bProcessing": true,
             "bServerSide": true,         // 服务器处理分页
+            "fnServerParams": function ( aoData ) {
+                aoData.push(
+                    { "name": "keyword", "value": $("input[name='search']").val()}
+                );
+            },
             "sAjaxSource": "/log/listResource", // 通过ajax加载数据
+            "fnServerData" : function(sSource, aDataSet, fnCallback) {
+                $.ajax({
+                    "dataType" : 'json',
+                    "type" : "post",
+                    "url" : sSource,
+                    "data" : aDataSet,
+                    "success" : function(resp){
+                        fnCallback(resp);
+                    }
+                });
+            },
             "aoColumns": [
                 {
                     "mDataProp": "name",
@@ -21,13 +36,6 @@ $().ready(function() {
                 },
                 {
                     "mDataProp": "count"
-                },
-                {
-                    "mDataProp": null,
-                    "sClass": "center",
-                    "mRender": function (data) {
-                        return "<span class='center'><a class='fa fa-share' title='详情' href='/log/platformDetail?name="+data.name+"' target='_blank'>详情</a></span>";
-                    }
                 }],
             "oLanguage": { // 中文替换
                 "sProcessing": "处理中...",
@@ -55,11 +63,7 @@ $().ready(function() {
             }
         });
 
-    $('#userTable tbody').on('click', 'a.glyphicon', function (args) {
-        var dataObj = table.row($(this).parents('tr')).data();
-        var data  = {id: dataObj.id};
-        var url = '/user/delete';
+    // table.search($("input[name='search']").val())
 
-    });
 })
 

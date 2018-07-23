@@ -28,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     @Autowired
-    private com.fly.caipiao.analysis.framework.security.UserCredentials userCredentials;
+    private UserCredentials userCredentials;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

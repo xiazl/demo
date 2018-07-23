@@ -15,6 +15,6 @@ public interface RecordService {
      * 推广记录查询
      * @return
      */
-    PageDataResult<Record> list(PageBean pageBean, ConditionVO conditionVO,Integer type);
+    PageDataResult<Record> list(PageBean pageBean, ConditionVO conditionVO, Integer type);
 
 }

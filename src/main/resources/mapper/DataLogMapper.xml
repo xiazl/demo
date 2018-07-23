@@ -31,8 +31,9 @@
     </select>
 
     <select id="listByUv" resultType="com.fly.caipiao.analysis.vo.VisitVO">
-        select target_url as name,count(1) as 'count'
-        from data_log group by target_url,ip order by `count` desc
+        select target_url as name,count(1) as 'count' from (
+        select target_url ,ip
+        from data_log group by target_url,ip ) temp group by target_url order by `count` desc
     </select>
 
     <select id="listByDate" resultType="com.fly.caipiao.analysis.vo.DateVisitVO">
@@ -40,14 +41,28 @@
         from data_log group by date(date_time) order by `count` desc
     </select>
 
-    <select id="listByResource" resultType="com.fly.caipiao.analysis.vo.ResourceVisitVO">
-        select target_url as name,referer,count(1) as 'count'
-        from data_log group by target_url,referer order by `count` desc
+    <select id="listByResource" resultType="com.fly.caipiao.analysis.vo.VisitVO">
+        select target_url as name,count(1) as 'count'
+        from data_log where 1=1
+        <if test="sSearch!=null and sSearch.length() > 0">
+            and target_url = like concat('%',#{sSearch},'%')
+        </if>
+        <if test="keyword!=null and keyword.length() > 0">
+            and referer like concat('%',#{keyword},'%')
+        </if>
+        group by `name` order by `count` desc
     </select>
 
     <select id="listByPlatform" resultType="com.fly.caipiao.analysis.vo.VisitVO">
         select referer as name,count(1) as 'count'
-        from data_log group by `name` order by `count` desc
+        from data_log where 1=1
+        <if test="sSearch!=null and sSearch.length() > 0">
+            and referer like concat('%',#{sSearch},'%')
+        </if>
+        <if test="keyword!=null and keyword.length() > 0">
+            and target_url like concat('%',#{keyword},'%')
+        </if>
+        group by `name` order by `count` desc
     </select>
 
     <select id="listByPlatAndDate" resultType="com.fly.caipiao.analysis.vo.StatisticsVO">
@@ -56,16 +71,14 @@
     </select>
 
     <select id="listByPlatAndMonth" resultType="com.fly.caipiao.analysis.vo.StatisticsVO">
-        select target_url as 'name',month(date_time) as 'time',count(1) as 'count'
+        select target_url as 'name',date_format(date_time,'%Y-%m') as 'time',count(1) as 'count'
         from data_log group by target_url,`time` order by `count` desc
     </select>
 
     <select id="listYKeys" resultType="java.lang.String">
-        select distinct target_url from data_log
-    </select>
-
-    <select id="listXKeys" resultType="java.lang.String">
-        select distinct date(date_time) from data_log
+        select target_url from (
+          select target_url,count(1) as 'count' from data_log group by target_url order by `count`
+        ) temp
     </select>
 
 </mapper>

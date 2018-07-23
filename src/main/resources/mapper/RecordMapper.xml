@@ -23,7 +23,7 @@
             and type = #{type}
         </if>
         <if test="condition.sSearch!=null and condition.sSearch.length() > 0" >
-            and url like concat('%',#{sSearch},'%')
+            and url like concat('%',#{condition.sSearch},'%')
         </if>
     </select>
 

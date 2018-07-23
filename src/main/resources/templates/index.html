@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" style="height: 100%">
 
 <head th:include="common_css :: common_head('主页')">
     <!-- Morris Charts CSS -->
@@ -7,14 +7,14 @@
 
 </head>
 
-<body>
+<body style="height: 200%">
 
-    <div id="wrapper">
+    <div id="wrapper" style="height: 100%">
 
         <!-- template -->
         <div th:include="common :: copy"></div>
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" style="height: 95%">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
@@ -22,9 +22,9 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
+            <div class="row" style="height: 86%">
+                <div class="col-lg-12" style="height: 100%">
+                    <div class="panel panel-default" style="height: 50%">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> 推广总报表
                             <div class="pull-right">
@@ -33,7 +33,7 @@
                                         Actions
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
+                                    <ul class="dropdown-menu pull-right" role="menu" name="dropdown-menu1">
                                         <li><a href="#">按天统计</a>
                                         </li>
                                         <li><a href="#">按月统计</a>
@@ -48,13 +48,13 @@
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div id="total-area-chart"></div>
+                        <div class="panel-body" style="height: 93.5%">
+                            <div id="area-chart" style="height: 100%"></div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" style="height: 50%">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> 详细分布表
                             <div class="pull-right">
@@ -63,7 +63,7 @@
                                         Actions
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
+                                    <ul class="dropdown-menu pull-right" role="menu" name="dropdown-menu2">
                                         <li><a href="#">按天统计</a>
                                         </li>
                                         <li><a href="#">按月统计</a>
@@ -78,8 +78,8 @@
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div id="simple-area-chart"></div>
+                        <div class="panel-body" style="height: 93.5%">
+                            <div id="line-chart" style="height: 100%"></div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -95,9 +95,10 @@
     <!-- /#wrapper -->
     <div th:include="common_js :: common_foot"></div>
     <!-- Morris Charts JavaScript -->
-    <script src="../sb/vendor/raphael/raphael.min.js"></script>
-    <script src="../sb/vendor/morrisjs/morris.min.js"></script>
-    <script src="../sb/data/morris-data.js"></script>
+    <!--<script src="../sb/vendor/raphael/raphael.min.js"></script>-->
+    <!--<script src="../sb/vendor/morrisjs/morris.min.js"></script>-->
+    <script src="../js/echarts/echarts.common.min.js"></script>
+    <script src="../js/index.js"></script>
 </body>
 
 </html>

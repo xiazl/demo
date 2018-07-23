@@ -25,6 +25,11 @@ spring:
       port: 27017
       database: test
       password: 1234qwer
+#    cassandra:
+#      contact-points: 127.0.0.1
+#      port: 9042
+#      cluster-name: Test Cluster
+#      keyspace-name:
 
 datasource:
   type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
@@ -45,6 +50,9 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*.xml
     configuration:
       mapUnderscoreToCamelCase: true
+#spark:
+#  master: spark://master:7077
+
 
 
 #logger
@@ -53,6 +61,7 @@ logging:
   level:
     root: info
     com.fly.caipiao.analysis.mapper: debug
+
 
 log.data.path: /Users/baidu/Downloads
 

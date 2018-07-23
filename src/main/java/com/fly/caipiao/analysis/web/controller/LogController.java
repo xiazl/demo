@@ -1,22 +1,24 @@
 package com.fly.caipiao.analysis.web.controller;
 
-import com.fly.caipiao.analysis.entity.DataLog;
+import com.fly.caipiao.analysis.common.utils.DateUtils;
+import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
 import com.fly.caipiao.analysis.framework.response.ResponseData;
 import com.fly.caipiao.analysis.framework.response.Result;
 import com.fly.caipiao.analysis.service.LogService;
-import com.fly.caipiao.analysis.vo.*;
+import com.fly.caipiao.analysis.vo.DateVisitVO;
+import com.fly.caipiao.analysis.vo.EChartVO;
+import com.fly.caipiao.analysis.vo.StatisticsVO;
+import com.fly.caipiao.analysis.vo.VisitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author baidu
@@ -57,13 +59,32 @@ public class LogController {
     }
 
     @RequestMapping("/indexPlatform")
-    public String indexPlatform() {
+    public String indexPlatform()
+    {
         return "log_platform";
+    }
+
+    @RequestMapping("/resourceDetail")
+    public String indexResource(Model model,String name) {
+        model.addAttribute("name",name);
+        return "log_resource_detail";
+    }
+
+    @RequestMapping("/platformDetail")
+    public String indexPlatform(Model model,String name)
+    {
+        model.addAttribute("name",name);
+        return "log_platform_detail";
+    }
+
+    @RequestMapping("/indexUser")
+    public String indexUser() {
+        return "map";
     }
 
     @ResponseBody
     @RequestMapping("/list")
-    public PageDataResult<DataLog> list(PageBean pageBean,ConditionVO conditionVO) {
+    public PageDataResult<CDNLogEntity> list(PageBean pageBean, ConditionVO conditionVO) {
         return logService.list(pageBean,conditionVO);
     }
 
@@ -88,7 +109,7 @@ public class LogController {
 
     @ResponseBody
     @RequestMapping("/listResource")
-    public PageDataResult<ResourceVisitVO> listByResource(PageBean pageBean, ConditionVO conditionVO) {
+    public PageDataResult<VisitVO> listByResource(PageBean pageBean, ConditionVO conditionVO) {
         return logService.listByResource(pageBean,conditionVO);
     }
 
@@ -101,19 +122,24 @@ public class LogController {
     @ResponseBody
     @RequestMapping("/listByPlatAndDate")
     public Result listByPlatAndDate() {
-        List<StatisticsVO> list = logService.listByPlatAndDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH,-1);
+        List<String> xkeys = DateUtils.getListDay(calendar.getTime(),new Date());
+        int length = xkeys.size();
+        List<StatisticsVO> list = logService.listByPlatAndDate(xkeys.get(0),xkeys.get(length-1));
+
         Map<String,Object> map = new HashMap<>();
         for(StatisticsVO vo : list){
             map.put(vo.getTime()+vo.getName(),vo.getCount());
         }
 
         List<String> ykeys = logService.listYKeys();
-        List<String> xkeys = logService.listXKeys();
 
-        RaphaelChartVO chartVO = new RaphaelChartVO();
+        EChartVO chartVO = new EChartVO();
         List<Map> mapList = new ArrayList<>();
         for(String x : xkeys){
             Map<String,Object> nmap = new HashMap<>();
+            nmap.put("time",x);
             for(String y : ykeys) {
                 if(map.containsKey(x+y)){
                     nmap.put(y, map.get(x+y));
@@ -121,33 +147,38 @@ public class LogController {
                     nmap.put(y, 0);
                 }
             }
-            nmap.put("time",x);
             mapList.add(nmap);
         }
 
+        List<String> keys = new ArrayList<>();
+        keys.add("time");
+        keys.addAll(ykeys);
+
         chartVO.setData(mapList);
-        chartVO.setXkey("time");
-        chartVO.setLabels(ykeys);
-        chartVO.setYkeys(ykeys);
+        chartVO.setKeys(keys);
         return ResponseData.success(chartVO);
     }
 
     @ResponseBody
     @RequestMapping("/listByPlatAndMonth")
     public Result listByPlatAndMonth() {
-        List<StatisticsVO> list = logService.listByPlatAndMonth();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-1);
+        List<String> xkeys = DateUtils.getListMonth(calendar.getTime(),new Date());
+        int length = xkeys.size();
+        List<StatisticsVO> list = logService.listByPlatAndMonth(xkeys.get(0),xkeys.get(length-1));
         Map<String,Object> map = new HashMap<>();
         for(StatisticsVO vo : list){
             map.put(vo.getTime()+vo.getName(),vo.getCount());
         }
 
         List<String> ykeys = logService.listYKeys();
-        List<String> xkeys = logService.listXKeys();
 
-        RaphaelChartVO chartVO = new RaphaelChartVO();
+        EChartVO chartVO = new EChartVO();
         List<Map> mapList = new ArrayList<>();
         for(String x : xkeys){
             Map<String,Object> nmap = new HashMap<>();
+            nmap.put("time",x);
             for(String y : ykeys) {
                 if(map.containsKey(x+y)){
                     nmap.put(y, map.get(x+y));
@@ -158,11 +189,12 @@ public class LogController {
             mapList.add(nmap);
         }
 
+        List<String> keys = new ArrayList<>();
+        keys.add("time");
+        keys.addAll(ykeys);
 
         chartVO.setData(mapList);
-        chartVO.setXkey("time");
-        chartVO.setLabels(ykeys);
-        chartVO.setYkeys(ykeys);
+        chartVO.setKeys(keys);
         return ResponseData.success(chartVO);
     }
 

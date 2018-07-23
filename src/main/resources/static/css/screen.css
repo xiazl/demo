@@ -22,3 +22,12 @@ label.error, label.error {
 .user-line{
     color: #2d77b7;
 }
+
+a {
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
