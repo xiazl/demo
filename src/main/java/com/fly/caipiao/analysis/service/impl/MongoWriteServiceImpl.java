@@ -64,14 +64,23 @@ public class MongoWriteServiceImpl implements MongoWriteService {
         Criteria criteria = new Criteria();
         criteria.and("id").in(ids);
         query.addCriteria(criteria);
-        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,COLLECTION_NAME);
+        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,PV_COLLECTION_NAME);
         List<String> oldIds = new ArrayList<>();
         Map<String,PvStatistics> map = new HashMap<>();
         for(PvStatistics cs : result){
             map.put(cs.getId(),cs);
         }
-        for(PvStatistics entity : entities){
+
+        Iterator<PvStatistics> iterator = entities.iterator();
+        while (iterator.hasNext()){
+            PvStatistics entity = iterator.next();
             if(map.containsKey(entity.getId())){
+                // 去重复，防止重复的数据导入
+                PvStatistics oldEntity = map.get(entity.getId());
+                if(oldEntity.getHkey().equals(entity.getHkey())){
+                    iterator.remove();
+                }
+
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
@@ -94,14 +103,23 @@ public class MongoWriteServiceImpl implements MongoWriteService {
         Criteria criteria = new Criteria();
         criteria.and("id").in(ids);
         query.addCriteria(criteria);
-        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,COLLECTION_NAME);
+        List<UvStatistics> result  = mongoTemplate.find(query,UvStatistics.class,UV_COLLECTION_NAME);
         List<String> oldIds = new ArrayList<>();
-        Map<String,PvStatistics> map = new HashMap<>();
-        for(PvStatistics cs : result){
+        Map<String,UvStatistics> map = new HashMap<>();
+        for(UvStatistics cs : result){
             map.put(cs.getId(),cs);
         }
-        for(UvStatistics entity : entities){
+
+        Iterator<UvStatistics> iterator = entities.iterator();
+        while (iterator.hasNext()){
+            UvStatistics entity = iterator.next();
             if(map.containsKey(entity.getId())){
+                // 去重复，防止重复的数据导入
+                UvStatistics oldEntity = map.get(entity.getId());
+                if(oldEntity.getHkey().equals(entity.getHkey())){
+                    iterator.remove();
+                }
+
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
@@ -124,14 +142,23 @@ public class MongoWriteServiceImpl implements MongoWriteService {
         Criteria criteria = new Criteria();
         criteria.and("id").in(ids);
         query.addCriteria(criteria);
-        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,COLLECTION_NAME);
+        List<PlatformStatistics> result  = mongoTemplate.find(query,PlatformStatistics.class,PLATFORM_COLLECTION_NAME);
         List<String> oldIds = new ArrayList<>();
-        Map<String,PvStatistics> map = new HashMap<>();
-        for(PvStatistics cs : result){
+        Map<String,PlatformStatistics> map = new HashMap<>();
+        for(PlatformStatistics cs : result){
             map.put(cs.getId(),cs);
         }
-        for(PlatformStatistics entity : entities){
+
+        Iterator<PlatformStatistics> iterator = entities.iterator();
+        while (iterator.hasNext()){
+            PlatformStatistics entity = iterator.next();
             if(map.containsKey(entity.getId())){
+                // 去重复，防止重复的数据导入
+                PlatformStatistics oldEntity = map.get(entity.getId());
+                if(oldEntity.getHkey().equals(entity.getHkey())){
+                    iterator.remove();
+                }
+
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
@@ -153,14 +180,23 @@ public class MongoWriteServiceImpl implements MongoWriteService {
         Criteria criteria = new Criteria();
         criteria.and("id").in(ids);
         query.addCriteria(criteria);
-        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,COLLECTION_NAME);
+        List<ResourceStatistics> result  = mongoTemplate.find(query,ResourceStatistics.class,RESOURCE_COLLECTION_NAME);
         List<String> oldIds = new ArrayList<>();
-        Map<String,PvStatistics> map = new HashMap<>();
-        for(PvStatistics cs : result){
+        Map<String,ResourceStatistics> map = new HashMap<>();
+        for(ResourceStatistics cs : result){
             map.put(cs.getId(),cs);
         }
-        for(ResourceStatistics entity : entities){
+
+        Iterator<ResourceStatistics> iterator = entities.iterator();
+        while (iterator.hasNext()){
+            ResourceStatistics entity = iterator.next();
             if(map.containsKey(entity.getId())){
+                // 去重复，防止重复的数据导入
+                ResourceStatistics oldEntity = map.get(entity.getId());
+                if(oldEntity.getHkey().equals(entity.getHkey())){
+                    iterator.remove();
+                }
+
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
@@ -183,14 +219,23 @@ public class MongoWriteServiceImpl implements MongoWriteService {
         Criteria criteria = new Criteria();
         criteria.and("id").in(ids);
         query.addCriteria(criteria);
-        List<PvStatistics> result  = mongoTemplate.find(query,PvStatistics.class,RESOURCE_PLATFORM_COLLECTION_NAME);
+        List<ResourcePlatformStatistics> result  = mongoTemplate.find(query,ResourcePlatformStatistics.class,RESOURCE_PLATFORM_COLLECTION_NAME);
         List<String> oldIds = new ArrayList<>();
-        Map<String,PvStatistics> map = new HashMap<>();
-        for(PvStatistics cs : result){
+        Map<String,ResourcePlatformStatistics> map = new HashMap<>();
+        for(ResourcePlatformStatistics cs : result){
             map.put(cs.getId(),cs);
         }
-        for(ResourcePlatformStatistics entity : entities){
+
+        Iterator<ResourcePlatformStatistics> iterator = entities.iterator();
+        while (iterator.hasNext()){
+            ResourcePlatformStatistics entity = iterator.next();
             if(map.containsKey(entity.getId())){
+                // 去重复，防止重复的数据导入
+                ResourcePlatformStatistics oldEntity = map.get(entity.getId());
+                if(oldEntity.getHkey().equals(entity.getHkey())){
+                    iterator.remove();
+                }
+
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
@@ -202,7 +247,7 @@ public class MongoWriteServiceImpl implements MongoWriteService {
     }
 
     /**
-     * 老数据清楚
+     * 老数据清除
      * @param ids
      * @param collectionName
      */

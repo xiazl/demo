@@ -18,7 +18,7 @@
     </select>
 
     <select id="aggregationPv" resultType="com.fly.caipiao.analysis.entity.PvStatistics">
-        select target_url,substr(date_time,0,10) as date,count(1) as count
+        select id as hkey,target_url,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1 = 1
         <if test="time!=null> 0">
            and create_time = #{time}
@@ -27,8 +27,8 @@
     </select>
 
     <select id="aggregationUv" resultType="com.fly.caipiao.analysis.entity.UvStatistics">
-        select target_url,dt as date,count(1) as count from (
-        select target_url ,ip,substr(date_time,0,10) as dt
+        select hkey,target_url,dt as date,count(1) as count from (
+        select id as hkey,target_url ,ip,substr(date_time,0,10) as dt
         from "cdn_logs" where 1 = 1
         <if test="time!=null">
             and create_time = #{time}
@@ -37,7 +37,7 @@
     </select>
 
     <select id="aggregationPlatform" resultType="com.fly.caipiao.analysis.entity.PlatformStatistics">
-        select referer,substr(date_time,0,10) as date,count(1) as count
+        select id as hkey,referer,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
             and create_time = #{time}
@@ -46,7 +46,7 @@
     </select>
 
     <select id="aggregationResource" resultType="com.fly.caipiao.analysis.entity.ResourceStatistics">
-        select target_url,substr(date_time,0,10) as date,count(1) as count
+        select id as hkey,target_url,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
             and create_time = #{time}
@@ -55,7 +55,7 @@
     </select>
 
     <select id="aggregationResourcePlatform" resultType="com.fly.caipiao.analysis.entity.ResourcePlatformStatistics">
-        select target_url,referer,substr(date_time,0,10) as date,count(1) as count
+        select id as hkey,target_url,referer,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
             and create_time = #{time}

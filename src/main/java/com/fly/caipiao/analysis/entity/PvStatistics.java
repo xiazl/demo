@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Document(collection = "pv")
 public class PvStatistics implements Serializable {
     private String id;
+    private String hkey; // hbase主键值，hbase覆盖式插入，hkey拿来去重复用
     private String date;
     private String targetUrl;
     private Integer count;
@@ -24,6 +25,14 @@ public class PvStatistics implements Serializable {
 
     public void setId() {
         this.id = MD5Encrypt.getEncrypt().encode(date+targetUrl);
+    }
+
+    public String getHkey() {
+        return hkey;
+    }
+
+    public void setHkey(String hkey) {
+        this.hkey = hkey;
     }
 
     public String getDate() {
