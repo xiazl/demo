@@ -7,6 +7,7 @@ import com.fly.caipiao.analysis.entity.HbaseEntity;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
+import com.fly.caipiao.analysis.mapper.ErrorRecordMapper;
 import com.fly.caipiao.analysis.service.HbaseService;
 import com.fly.caipiao.analysis.service.MongoWriteService;
 import com.fly.caipiao.analysis.service.PhoenixService;
@@ -55,6 +56,8 @@ public class HbaseServiceImpl implements HbaseService {
     private PhoenixService phoenixService;
     @Autowired
     private Connection hbaseConnection;
+    @Autowired
+    private ErrorRecordMapper errorRecordMapper;
 
     @Override
     public PageDataResult<HbaseEntity> list(PageBean pageBean, String lastRowKey) {
@@ -111,10 +114,10 @@ public class HbaseServiceImpl implements HbaseService {
 
                 Put put = new Put(entity.getId().getBytes());
                 /**  因为适用phoenix的缘故，字段名都用大写了，使用上比较方便一点  */
-                put.addColumn(FAMILY_NAME.getBytes(), "IP".getBytes(), entity.getIp().getBytes());
-                put.addColumn(FAMILY_NAME.getBytes(), "DATE_TIME".getBytes(), entity.getDateTime().getBytes());
-                put.addColumn(FAMILY_NAME.getBytes(), "REFERER".getBytes(), entity.getReferer().getBytes());
-                put.addColumn(FAMILY_NAME.getBytes(), "TARGET_URL".getBytes(), entity.getTargetUrl().getBytes());
+                put.addColumn(FAMILY_NAME.getBytes(), "IP".getBytes(), Bytes.toBytes(entity.getIp()));
+                put.addColumn(FAMILY_NAME.getBytes(), "DATE_TIME".getBytes(), Bytes.toBytes(entity.getDateTime()));
+                put.addColumn(FAMILY_NAME.getBytes(), "REFERER".getBytes(), this.getBytes(entity.getReferer()));
+                put.addColumn(FAMILY_NAME.getBytes(), "TARGET_URL".getBytes(), Bytes.toBytes(entity.getTargetUrl()));
                 put.addColumn(FAMILY_NAME.getBytes(), "CREATE_TIME".getBytes(), Bytes.toBytes(timeMillis));
 
                 lists.add(put);
@@ -123,9 +126,9 @@ public class HbaseServiceImpl implements HbaseService {
             table.put(lists);
             table.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            throw new AppException(e.getMessage());
+            throw new AppException("数据插入hbase失败"+e.getMessage());
         }
 
     }
@@ -148,16 +151,17 @@ public class HbaseServiceImpl implements HbaseService {
         public void run() {
             List<Future<Long>> result = new ArrayList<>();
 
-        result.add(EXECUTOR.submit(new PvThread(time, phoenixService, mongoWriteService)));
-        result.add(EXECUTOR.submit(new UvThread(time, phoenixService, mongoWriteService)));
-        result.add(EXECUTOR.submit(new PlatformThread(time, phoenixService, mongoWriteService)));
-        result.add(EXECUTOR.submit(new ResourceThread(time, phoenixService, mongoWriteService)));
+            result.add(EXECUTOR.submit(new PvThread(time, phoenixService, mongoWriteService)));
+            result.add(EXECUTOR.submit(new UvThread(time, phoenixService, mongoWriteService)));
+            result.add(EXECUTOR.submit(new PlatformThread(time, phoenixService, mongoWriteService)));
+            result.add(EXECUTOR.submit(new ResourceThread(time, phoenixService, mongoWriteService)));
             result.add(EXECUTOR.submit(new ResourcePlatformThread(time, phoenixService, mongoWriteService)));
 
 
             try {
-                for (int i = 0; i < 5; i++) {
-                    Long returnValue = result.get(i).get();;
+                for (int i = 4; i < 5; i++) {
+                    Long returnValue = result.get(0).get();
+
                     switch (i) {
                         case 0:
                             if (returnValue != null) {
@@ -192,6 +196,8 @@ public class HbaseServiceImpl implements HbaseService {
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
+
+            LOGGER.info("Aggregation Statistics Success!!!");
         }
 
         /**
@@ -205,7 +211,18 @@ public class HbaseServiceImpl implements HbaseService {
             record.setName(message);
             record.setStatus(DEFAULT_STATUS);
             record.setTime(time);
+
+            errorRecordMapper.insert(record);
         }
     }
+
+
+    private byte[] getBytes(String content){
+        if(content == null){
+            return null;
+        }
+        return Bytes.toBytes(content);
+    }
+
 
 }

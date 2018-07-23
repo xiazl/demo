@@ -80,10 +80,8 @@ public class TestController {
 
     @ResponseBody
     @RequestMapping("/aggregation")
-    public Result aggregation(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE,-320);
-        hbaseService.aggregationStatistics(calendar.getTimeInMillis());
+    public Result aggregation(Long time){
+        hbaseService.aggregationStatistics(time);
         return ResponseData.success();
     }
 
@@ -104,6 +102,7 @@ public class TestController {
         }
         List<CDNLogEntity> list = new ArrayList<>();
         List<String> ids = new ArrayList<>();
+        // 记录当前时间戳
         Long timeMillis = new Date().getTime();
 
         for(int i = 1;i <= length;i++) {

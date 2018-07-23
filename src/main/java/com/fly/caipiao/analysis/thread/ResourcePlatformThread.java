@@ -35,14 +35,14 @@ public class ResourcePlatformThread implements Callable<Long> {
         pageBean.setiDisplayLength(SIZE);
         try {
             PageDataResult<ResourcePlatformStatistics> list = phoenixService.aggregationResourcePlatform(pageBean,time);
-//            mongoWriteService.insertBatchResourcePlatform(list.getData());
+            mongoWriteService.insertBatchResourcePlatform(list.getData());
 
             int pages = (int) (list.getiTotalRecords()/SIZE + 1);
             if(pages > 1){
                 for(int page = 2;page <= pages; page ++){
                     pageBean.setiDisplayStart((long) ((page -1)*SIZE));
                     list = phoenixService.aggregationResourcePlatform(pageBean,time);
-//                    mongoWriteService.insertBatchResourcePlatform(list.getData());
+                    mongoWriteService.insertBatchResourcePlatform(list.getData());
                 }
             }
         } catch (Exception e) {

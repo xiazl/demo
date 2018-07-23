@@ -137,10 +137,10 @@ public class DataServiceImpl implements DataService {
             hbaseService.aggregationStatistics(timeMillis);
 
         } catch (FileNotFoundException e) {
-            sc.close();
             LOGGER.error("数据解析异常"+e.getMessage(),e);
             throw new AppException("未找到文件路径");
         } catch (ParseException e) {
+            sc.close();
             LOGGER.error("数据解析异常"+e.getMessage(),e);
             throw new AppException(e.getMessage(),e);
         }

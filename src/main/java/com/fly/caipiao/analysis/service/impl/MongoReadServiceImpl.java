@@ -33,7 +33,6 @@ import java.util.List;
 @Service("mongoReadService")
 public class MongoReadServiceImpl implements MongoReadService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoReadServiceImpl.class);
-    private static final String COLLECTION_NAME = "user";
     private static final String PV_COLLECTION_NAME = "pv";
     private static final String UV_COLLECTION_NAME = "uv";
     private static final String PLATFORM_COLLECTION_NAME = "platform";
