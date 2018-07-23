@@ -27,7 +27,7 @@ spring:
       password: 1234qwer
 
     hbase:
-      quorum: my.test.hbase
+      quorum: 127.0.0.1
       root-dir:
       port:
 
@@ -53,7 +53,7 @@ datasource:
     password: F%46tff%^#@e
   phoenix:
     driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
-    url: jdbc:phoenix:my.test.hbase
+    url: jdbc:phoenix:127.0.0.1
 
 
 # MyBatis
