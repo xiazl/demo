@@ -133,6 +133,38 @@ public class HbaseServiceImpl implements HbaseService {
 
     }
 
+    private void createTable(String tableName) {
+        HBaseAdmin admin = null;
+        try {
+
+            admin = (HBaseAdmin) hbaseConnection.getAdmin();
+
+            if (admin.tableExists(TableName.valueOf(tableName))) {
+                LOGGER.warn("Table: {} is exists!", tableName);
+                return;
+            }
+
+            TableDescriptorBuilder.ModifyableTableDescriptor descriptor = new TableDescriptorBuilder
+                    .ModifyableTableDescriptor(TableName.valueOf(tableName));
+            descriptor.setColumnFamily(new ColumnFamilyDescriptorBuilder.ModifyableColumnFamilyDescriptor(FAMILY_NAME.getBytes()));
+//            descriptor.setColumnFamily(new ColumnFamilyDescriptorBuilder.ModifyableColumnFamilyDescriptor("targetUrl".getBytes()));
+
+            admin.createTable(descriptor);
+
+            LOGGER.debug("Table: {} create success!", tableName);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new AppException("数据写入失败");
+        } finally {
+            try {
+                admin.close();
+                hbaseConnection.close();
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+    }
+
 
     @Override
     public void aggregationStatistics(Long time){
