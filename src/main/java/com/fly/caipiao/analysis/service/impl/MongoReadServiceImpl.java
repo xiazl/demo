@@ -95,7 +95,7 @@ public class MongoReadServiceImpl implements MongoReadService {
 
     @Override
     public PageDataResult<VisitVO> listByUv(PageBean pageBean, ConditionVO conditionVO) {
-        Criteria criteria =this.getCriteria(conditionVO,"referer");
+        Criteria criteria =this.getCriteria(conditionVO,"targetUrl");
         MatchOperation matchOperation = Aggregation.match(criteria);
 
         ProjectionOperation projectionOperation = Aggregation.project("targetUrl","count").and("name").previousOperation();
