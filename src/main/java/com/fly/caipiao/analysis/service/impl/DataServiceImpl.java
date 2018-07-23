@@ -86,7 +86,7 @@ public class DataServiceImpl implements DataService {
             while (sc.hasNextLine()) {
                 if(i == BATCH_SIZE){
 //                    logMongoService.insertBatch(list,ids);
-                    hbaseService.insertBatch(list);
+                    hbaseService.insertBatch(list,timeMillis);
 
                     i = 0;
                     list = new ArrayList<>();
@@ -128,7 +128,7 @@ public class DataServiceImpl implements DataService {
 
             if(i > 0){
 //                logMongoService.insertBatch(list,ids);
-                hbaseService.insertBatch(list);
+                hbaseService.insertBatch(list,timeMillis);
 
             }
 
@@ -182,5 +182,11 @@ public class DataServiceImpl implements DataService {
             recordMapper.insert(list);
         }
     }
+
+    private Long getLongTime(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTimeInMillis();
+    }
+
 
 }

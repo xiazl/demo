@@ -96,7 +96,7 @@ public class HbaseServiceImpl implements HbaseService {
 
     @Override
     @TimeConsuming("hbase插入")
-    public void insertBatch(List<CDNLogEntity> list) {
+    public void insertBatch(List<CDNLogEntity> list,Long timeMillis) {
         // 创建表，初始化调用一次
 //        this.createTable(TABLE_NAME);
 
@@ -106,7 +106,6 @@ public class HbaseServiceImpl implements HbaseService {
         try {
             table = hbaseConnection.getTable(TableName.valueOf(TABLE_NAME));
             List<Put> lists = new ArrayList<>();
-
             for (CDNLogEntity entity : list) {
                 /**  因为hbase覆盖式更新所以不需要去重复处理  */
 
@@ -116,7 +115,7 @@ public class HbaseServiceImpl implements HbaseService {
                 put.addColumn(FAMILY_NAME.getBytes(), "DATE_TIME".getBytes(), entity.getDateTime().getBytes());
                 put.addColumn(FAMILY_NAME.getBytes(), "REFERER".getBytes(), entity.getReferer().getBytes());
                 put.addColumn(FAMILY_NAME.getBytes(), "TARGET_URL".getBytes(), entity.getTargetUrl().getBytes());
-                put.addColumn(FAMILY_NAME.getBytes(), "CREATE_TIME".getBytes(), Bytes.toBytes(getLongTime()));
+                put.addColumn(FAMILY_NAME.getBytes(), "CREATE_TIME".getBytes(), Bytes.toBytes(timeMillis));
 
                 lists.add(put);
             }
@@ -207,11 +206,6 @@ public class HbaseServiceImpl implements HbaseService {
             record.setStatus(DEFAULT_STATUS);
             record.setTime(time);
         }
-    }
-
-    private Long getLongTime(){
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTimeInMillis();
     }
 
 }

@@ -21,7 +21,7 @@
         select target_url,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1 = 1
         <if test="time!=null> 0">
-           and create_time &gt;= #{time}
+           and create_time = #{time}
         </if>
         group by target_url,date order by count desc
     </select>
@@ -31,7 +31,7 @@
         select target_url ,ip,substr(date_time,0,10) as dt
         from "cdn_logs" where 1 = 1
         <if test="time!=null">
-            and create_time &gt;= #{time}
+            and create_time = #{time}
         </if>
         group by target_url,ip,dt) temp group by target_url,date order by count desc
     </select>
@@ -40,7 +40,7 @@
         select referer,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
-            and create_time &gt;= #{time}
+            and create_time = #{time}
         </if>
         group by referer,date order by count desc
     </select>
@@ -49,7 +49,7 @@
         select target_url,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
-            and create_time &gt;= #{time}
+            and create_time = #{time}
         </if>
         group by target_url,date order by count desc
     </select>
@@ -58,7 +58,7 @@
         select target_url,referer,substr(date_time,0,10) as date,count(1) as count
         from "cdn_logs" where 1=1
         <if test="time!=null">
-            and create_time &gt;= #{time}
+            and create_time = #{time}
         </if>
         group by target_url,referer,date order by count desc
     </select>

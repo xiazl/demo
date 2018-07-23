@@ -24,7 +24,7 @@ public interface HbaseService {
     /**
      * 批量写入
      */
-    void insertBatch(List<CDNLogEntity> list);
+    void insertBatch(List<CDNLogEntity> list, Long timeMillis);
 
     /**
      * 按天统计数据写入mongo
