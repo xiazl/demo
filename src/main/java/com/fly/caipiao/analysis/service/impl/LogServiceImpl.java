@@ -86,7 +86,7 @@ public class LogServiceImpl implements LogService {
 
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, COLLECTION_NAME, VisitVO.class);
@@ -117,7 +117,7 @@ public class LogServiceImpl implements LogService {
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
 
         Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,
-                groupOperation1,projectionOperation1,skipOperation, limitOperation,sortOperation).withOptions(
+                groupOperation1,projectionOperation1,sortOperation,skipOperation, limitOperation).withOptions(
                         Aggregation.newAggregationOptions().allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, COLLECTION_NAME, VisitVO.class);
@@ -144,7 +144,7 @@ public class LogServiceImpl implements LogService {
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         ProjectionOperation resultOperation = Aggregation.project("count").and("date").previousOperation();
         Aggregation aggregation = Aggregation.newAggregation(projectionOperation,matchOperation,groupOperation,
-                resultOperation,skipOperation,limitOperation,sortOperation);
+                resultOperation,sortOperation,skipOperation,limitOperation);
 
         AggregationResults<DateVisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, COLLECTION_NAME, DateVisitVO.class);
         return PageHelp.getDataResult(aggregationResults.getMappedResults(),size);
@@ -175,8 +175,8 @@ public class LogServiceImpl implements LogService {
 
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
-                allowDiskUse(true).build());;
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
+                allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, COLLECTION_NAME, VisitVO.class);
 
@@ -209,7 +209,7 @@ public class LogServiceImpl implements LogService {
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
 
         Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, COLLECTION_NAME, VisitVO.class);
