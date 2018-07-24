@@ -1,6 +1,7 @@
 package com.fly.caipiao.analysis.entity;
 
 import com.fly.caipiao.analysis.common.utils.MD5Encrypt;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -13,8 +14,8 @@ import java.io.Serializable;
 
 @Document(collection = "platform")
 public class PlatformStatistics implements Serializable {
+    @Id
     private String id;
-    private String hkey; // hbase主键值，hbase覆盖式插入，hkey拿来去重复用
     private String date;
     private String referer;
     private Integer count;
@@ -25,14 +26,6 @@ public class PlatformStatistics implements Serializable {
 
     public void setId() {
         this.id = MD5Encrypt.getEncrypt().encode(date+referer);
-    }
-
-    public String getHkey() {
-        return hkey;
-    }
-
-    public void setHkey(String hkey) {
-        this.hkey = hkey;
     }
 
     public String getDate() {

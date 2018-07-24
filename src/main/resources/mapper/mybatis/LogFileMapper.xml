@@ -21,4 +21,8 @@
         </if>
     </select>
 
+    <select id="queryByName" resultType="java.lang.Integer">
+        select count(1) from log_file where `name` = #{name}
+    </select>
+
 </mapper>

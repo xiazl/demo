@@ -99,7 +99,7 @@ public class HbaseServiceImpl implements HbaseService {
 
     @Override
     @TimeConsuming("hbase插入")
-    public void insertBatch(List<CDNLogEntity> list,Long timeMillis) {
+    public void insertBatch(List<CDNLogEntity> list,List<String> ids,Long timeMillis) {
         // 创建表，初始化调用一次
 //        this.createTable(TABLE_NAME);
 
@@ -107,10 +107,16 @@ public class HbaseServiceImpl implements HbaseService {
 
         Table table;
         try {
+            Map<String,String> map = this.queryTableByIds(ids);
+
             table = hbaseConnection.getTable(TableName.valueOf(TABLE_NAME));
             List<Put> lists = new ArrayList<>();
+
             for (CDNLogEntity entity : list) {
-                /**  因为hbase覆盖式更新所以不需要去重复处理  */
+                // 去重
+                if(map.containsKey(entity.getId())){
+                    continue;
+                }
 
                 Put put = new Put(entity.getId().getBytes());
                 /**  因为适用phoenix的缘故，字段名都用大写了，使用上比较方便一点  */
@@ -131,6 +137,32 @@ public class HbaseServiceImpl implements HbaseService {
             throw new AppException("数据插入hbase失败"+e.getMessage());
         }
 
+    }
+
+    /**
+     * 通过Id查询
+     * @param rowKeys
+     * @return
+     * @throws IOException
+     */
+    public Map queryTableByIds(List<String> rowKeys) throws IOException {
+        List<Get> keys = new ArrayList();
+        Table table = hbaseConnection.getTable( TableName.valueOf(TABLE_NAME));
+        for (String key : rowKeys){
+            Get get = new Get(Bytes.toBytes(key));
+            keys.add(get);
+        }
+
+        Result[] results = table.get(keys);
+        Map<String,String> map = new HashMap<>();
+        for (Result result : results){
+            if(result.getRow()!=null);
+            {
+                String row = Bytes.toString(result.getRow());
+                map.put(row, row);
+            }
+        }
+        return map;
     }
 
 
@@ -156,7 +188,6 @@ public class HbaseServiceImpl implements HbaseService {
             result.add(EXECUTOR.submit(new PlatformThread(time, phoenixService, mongoWriteService)));
             result.add(EXECUTOR.submit(new ResourceThread(time, phoenixService, mongoWriteService)));
             result.add(EXECUTOR.submit(new ResourcePlatformThread(time, phoenixService, mongoWriteService)));
-
 
             try {
                 for (int i = 4; i < 5; i++) {

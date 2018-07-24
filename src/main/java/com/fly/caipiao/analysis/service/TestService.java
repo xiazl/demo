@@ -34,10 +34,11 @@ public interface TestService {
      * 批量插入
      * @param entities
      */
-    void insertBatch(List<CDNLogEntity> entities, Long timeMillis);
+    void insertBatch(List<CDNLogEntity> entities, List<String> ids, Long timeMillis);
 
     /**
      * 清空集合数据
      */
+    @Deprecated
     void clear();
 }

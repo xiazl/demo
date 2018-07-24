@@ -3,6 +3,7 @@ package com.fly.caipiao.analysis.mapper;
 import com.fly.caipiao.analysis.entity.LogFile;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,8 +15,10 @@ import java.util.List;
 
 @Mapper
 public interface LogFileMapper {
+
+    Integer queryByName(@Param("name") String name);
     /**
-     * 插入用户
+     * 插入
      * @param file
      * @return
      */

@@ -12,4 +12,10 @@ public interface DataService {
      */
     void analysis(String name);
 
+    /**
+     * 日志文件解析（全量未处理文件）
+     * @param
+     */
+    void analysis();
+
 }

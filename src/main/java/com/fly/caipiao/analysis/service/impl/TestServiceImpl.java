@@ -20,7 +20,11 @@ import java.util.List;
 @Service("testService")
 public class TestServiceImpl implements TestService {
     private static final String COLLECTION_NAME = "user";
-
+    private static final String PV_COLLECTION_NAME = "pv";
+    private static final String UV_COLLECTION_NAME = "uv";
+    private static final String PLATFORM_COLLECTION_NAME = "platform";
+    private static final String RESOURCE_COLLECTION_NAME = "resource";
+    private static final String RESOURCE_PLATFORM_COLLECTION_NAME = "resource_platform";
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
@@ -46,14 +50,20 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void insertBatch(List<CDNLogEntity> entities,Long timeMillis) {
-        hbaseService.insertBatch(entities,timeMillis);
+    public void insertBatch(List<CDNLogEntity> entities,List<String> ids,Long timeMillis) {
+        hbaseService.insertBatch(entities,ids,timeMillis);
 //        mongoTemplate.insert(entities,CDNLogEntity.class);
     }
 
     @Override
     public void clear() {
         mongoTemplate.dropCollection(COLLECTION_NAME);
+        mongoTemplate.dropCollection(PV_COLLECTION_NAME);
+        mongoTemplate.dropCollection(UV_COLLECTION_NAME);
+        mongoTemplate.dropCollection(PLATFORM_COLLECTION_NAME);
+        mongoTemplate.dropCollection(RESOURCE_COLLECTION_NAME);
+        mongoTemplate.dropCollection(RESOURCE_PLATFORM_COLLECTION_NAME);
+
     }
 
 }

@@ -31,4 +31,11 @@ public class DataController {
         dataService.analysis(fileName);
         return ResponseData.success();
     }
+
+    @RequestMapping("/analysisAll")
+    @ResponseBody
+    public Result analysis(){
+        dataService.analysis();
+        return ResponseData.success();
+    }
 }

@@ -76,7 +76,7 @@ logging:
     com.fly.caipiao.analysis.mapper: debug
 
 
-log.data.path: /Users/baidu/Downloads
+log.data.path: /Users/baidu/Downloads/cdn_logs
 
 ---
 spring:

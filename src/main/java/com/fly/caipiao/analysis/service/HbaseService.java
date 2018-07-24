@@ -21,10 +21,11 @@ public interface HbaseService {
      * @return
      */
     PageDataResult<HbaseEntity> list(PageBean pageBean, String lastRowKey);
+
     /**
      * 批量写入
      */
-    void insertBatch(List<CDNLogEntity> list, Long timeMillis);
+    void insertBatch(List<CDNLogEntity> list, List<String> ids, Long timeMillis);
 
     /**
      * 按天统计数据写入mongo

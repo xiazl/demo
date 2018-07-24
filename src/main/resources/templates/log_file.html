@@ -14,9 +14,14 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">日志文件分析记录</h1>
+                    <h1 class="page-header">日志文件</h1>
                 </div>
                 <!-- /.col-lg-12 -->
+                <div class="form-group">
+                    <button id="batchButton" class="btn btn-primary pull-right">处理所有</button>
+                    <label class="pull-right"><strong class="red vam"> 注*   </strong>将分析所有未分析过的文件&nbsp;&nbsp; </label>
+                </div>
+
             </div>
             <!-- /.row -->
             <div class="row">
@@ -54,7 +59,8 @@
 
     <!-- DataTables JavaScript -->
     <div th:include="common_js :: common_foot"></div>
-
+    <script src="../js/layer/layer.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/log_file.js"></script>
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->

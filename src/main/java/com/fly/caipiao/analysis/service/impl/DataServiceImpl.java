@@ -10,7 +10,8 @@ import com.fly.caipiao.analysis.mapper.LogFileMapper;
 import com.fly.caipiao.analysis.mapper.RecordMapper;
 import com.fly.caipiao.analysis.service.DataService;
 import com.fly.caipiao.analysis.service.HbaseService;
-import com.fly.caipiao.analysis.service.PhoenixService;
+import com.fly.caipiao.analysis.service.LogFileService;
+import com.fly.caipiao.analysis.web.controller.vo.FileVO;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -47,12 +48,17 @@ public class DataServiceImpl implements DataService {
     @Autowired
     private LogFileMapper logFileMapper;
     @Autowired
-    private PhoenixService phoenixService;
+    private LogFileService logFileService;
 
     @Override
     @TimeConsuming("数据解析并保存")
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public void analysis(String name) {
+        Boolean checkStatus = this.checkRepeat(name);
+        if(!checkStatus){
+            throw new AppException("\""+name+"\"重复导入");  // 重复导入处理
+        }
+
         this.saveLogFile(name);
 
         // 记录当前时间戳
@@ -86,7 +92,7 @@ public class DataServiceImpl implements DataService {
             while (sc.hasNextLine()) {
                 if(i == BATCH_SIZE){
 //                    logMongoService.insertBatch(list,ids);
-                    hbaseService.insertBatch(list,timeMillis);
+                    hbaseService.insertBatch(list,ids,timeMillis);
 
                     i = 0;
                     list = new ArrayList<>();
@@ -128,7 +134,7 @@ public class DataServiceImpl implements DataService {
 
             if(i > 0){
 //                logMongoService.insertBatch(list,ids);
-                hbaseService.insertBatch(list,timeMillis);
+                hbaseService.insertBatch(list,ids,timeMillis);
 
             }
 
@@ -146,6 +152,29 @@ public class DataServiceImpl implements DataService {
         }
 
     }
+
+    @Override
+    @TimeConsuming("批量文件处解析并保存")
+    public void analysis() {
+        List<FileVO> files = logFileService.listDirFiles();
+        for (FileVO fileVO : files){
+            if(this.checkRepeat(fileVO.getName())){  // 跳过有导入记录的文件
+                this.analysis(fileVO.getName());
+            }
+        }
+    }
+
+    /**
+     * 重复导入检查
+     * @param name
+     */
+    private boolean checkRepeat(String name){
+        if(logFileMapper.queryByName(name) > 0){
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * 记录日志文件分析记录

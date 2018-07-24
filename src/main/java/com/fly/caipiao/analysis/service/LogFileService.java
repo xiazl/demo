@@ -4,6 +4,9 @@ import com.fly.caipiao.analysis.entity.LogFile;
 import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
+import com.fly.caipiao.analysis.web.controller.vo.FileVO;
+
+import java.util.List;
 
 /**
  * @author baidu
@@ -17,5 +20,12 @@ public interface LogFileService {
      * @return
      */
     PageDataResult<LogFile> list(PageBean pageBean, ConditionVO conditionVO);
+
+
+    /**
+     * 展示目录文件
+     * @return
+     */
+    List<FileVO> listDirFiles();
 
 }

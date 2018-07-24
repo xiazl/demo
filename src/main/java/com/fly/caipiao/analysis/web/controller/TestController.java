@@ -70,6 +70,10 @@ public class TestController {
         return "user";
     }
 
+    /**
+     * 文件导入记录
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/list")
     public Result find(){
@@ -77,7 +81,11 @@ public class TestController {
         return ResponseData.success(list);
     }
 
-
+    /**
+     * hbase数据计算失败时，补救
+     * @param time
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/aggregation")
     public Result aggregation(Long time){
@@ -85,6 +93,10 @@ public class TestController {
         return ResponseData.success();
     }
 
+    /**
+     * 清除mongo数据，测试用的
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/clear")
     public Result clear(){
@@ -108,7 +120,7 @@ public class TestController {
         for(int i = 1;i <= length;i++) {
             if(i % SIZE == 0) {
                 long startTime = System.currentTimeMillis();
-                testService.insertBatch(list,timeMillis);
+                testService.insertBatch(list,ids,timeMillis);
                 long endTime = System.currentTimeMillis();
                 System.out.println(SIZE+"条耗时："+String.valueOf(endTime - startTime));
 
@@ -126,7 +138,7 @@ public class TestController {
             list.add(entity);
         }
 
-        testService.insertBatch(list,timeMillis);
+        testService.insertBatch(list,ids,timeMillis);
 
         return ResponseData.success();
     }
@@ -148,6 +160,10 @@ public class TestController {
         return dateStringArray[index];
     }
 
+    /**
+     * 产品IP地址（测试用的）
+     * @return
+     */
     private String getIp(){
         StringBuilder stringBuilder = new StringBuilder();
         for(int i=0;i<4;i++){
@@ -158,6 +174,10 @@ public class TestController {
         return stringBuilder.toString().substring(0,length);
     }
 
+    /**
+     * 产品模拟网址数据（测试用的）
+     * @return
+     */
     private String getHttp(){
 //        String[] content = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o",
 //                "p","q","r","s","t","u","v","w","x","y","z"};

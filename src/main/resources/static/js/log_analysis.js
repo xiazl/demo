@@ -40,7 +40,7 @@ $().ready(function () {
             },
             complete: function () {
                 layer.close(this.layerIndex); // 关闭loading
-            },
+            }
         })
     })
 })

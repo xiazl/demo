@@ -46,3 +46,30 @@ var table = $('#fileLogTable').DataTable(
         }
     });
 
+$().ready(function() {
+    $("#batchButton").click(function() {
+        $.ajax({
+            url: '/data/analysisAll',
+            type: 'POST',
+            dataType: 'json',
+            layerIndex:-1,
+            beforeSend: function () { //插件加载前
+                this.layerIndex = layer.load(0, { shade: [0.01, '#fff'] });
+            },
+            success: function (result) {
+                if (result.code == "1000") {
+                    layerMsg('成功',true);
+                } else {
+                    layerMsg(result.message,false,{time: 3000})
+                }
+            },
+            error: function () {
+                layerMsg("网络异常",false,{time: 3000})
+            },
+            complete: function () {
+                layer.close(this.layerIndex); // 关闭loading
+            }
+        })
+    })
+})
+

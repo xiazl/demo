@@ -71,22 +71,14 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             map.put(cs.getId(),cs);
         }
 
-        Iterator<PvStatistics> iterator = entities.iterator();
-        while (iterator.hasNext()){
-            PvStatistics entity = iterator.next();
+        for(PvStatistics entity : entities){
             if(map.containsKey(entity.getId())){
-                // 去重复，防止重复的数据导入
-                PvStatistics oldEntity = map.get(entity.getId());
-                if(oldEntity.getHkey().equals(entity.getHkey())){
-                    iterator.remove();
-                }
-
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
         }
 
-        this.remove(oldIds,PV_COLLECTION_NAME);
+        this.remove(oldIds,PvStatistics.class);
 
         mongoTemplate.insert(entities,PvStatistics.class);
 
@@ -110,22 +102,14 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             map.put(cs.getId(),cs);
         }
 
-        Iterator<UvStatistics> iterator = entities.iterator();
-        while (iterator.hasNext()){
-            UvStatistics entity = iterator.next();
+        for(UvStatistics entity : entities){
             if(map.containsKey(entity.getId())){
-                // 去重复，防止重复的数据导入
-                UvStatistics oldEntity = map.get(entity.getId());
-                if(oldEntity.getHkey().equals(entity.getHkey())){
-                    iterator.remove();
-                }
-
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
         }
 
-        this.remove(oldIds,UV_COLLECTION_NAME);
+        this.remove(oldIds,UvStatistics.class);
 
         mongoTemplate.insert(entities,UvStatistics.class);
 
@@ -149,22 +133,14 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             map.put(cs.getId(),cs);
         }
 
-        Iterator<PlatformStatistics> iterator = entities.iterator();
-        while (iterator.hasNext()){
-            PlatformStatistics entity = iterator.next();
+        for(PlatformStatistics entity : entities){
             if(map.containsKey(entity.getId())){
-                // 去重复，防止重复的数据导入
-                PlatformStatistics oldEntity = map.get(entity.getId());
-                if(oldEntity.getHkey().equals(entity.getHkey())){
-                    iterator.remove();
-                }
-
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
         }
 
-        this.remove(oldIds,PLATFORM_COLLECTION_NAME);
+        this.remove(oldIds,PlatformStatistics.class);
         mongoTemplate.insert(entities,PlatformStatistics.class);
 
     }
@@ -187,22 +163,14 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             map.put(cs.getId(),cs);
         }
 
-        Iterator<ResourceStatistics> iterator = entities.iterator();
-        while (iterator.hasNext()){
-            ResourceStatistics entity = iterator.next();
+        for(ResourceStatistics entity : entities){
             if(map.containsKey(entity.getId())){
-                // 去重复，防止重复的数据导入
-                ResourceStatistics oldEntity = map.get(entity.getId());
-                if(oldEntity.getHkey().equals(entity.getHkey())){
-                    iterator.remove();
-                }
-
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
         }
 
-        this.remove(oldIds,RESOURCE_COLLECTION_NAME);
+        this.remove(oldIds,ResourceStatistics.class);
 
         mongoTemplate.insert(entities,ResourceStatistics.class);
 
@@ -226,22 +194,14 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             map.put(cs.getId(),cs);
         }
 
-        Iterator<ResourcePlatformStatistics> iterator = entities.iterator();
-        while (iterator.hasNext()){
-            ResourcePlatformStatistics entity = iterator.next();
+        for(ResourcePlatformStatistics entity : entities){
             if(map.containsKey(entity.getId())){
-                // 去重复，防止重复的数据导入
-                ResourcePlatformStatistics oldEntity = map.get(entity.getId());
-                if(oldEntity.getHkey().equals(entity.getHkey())){
-                    iterator.remove();
-                }
-
                 oldIds.add(entity.getId());
                 entity.setCount(entity.getCount()+map.get(entity.getId()).getCount());
             }
         }
 
-        this.remove(oldIds,RESOURCE_PLATFORM_COLLECTION_NAME);
+        this.remove(oldIds,ResourcePlatformStatistics.class);
 
         mongoTemplate.insert(entities,ResourcePlatformStatistics.class);
     }
@@ -249,16 +209,24 @@ public class MongoWriteServiceImpl implements MongoWriteService {
     /**
      * 老数据清除
      * @param ids
-     * @param collectionName
+     * @param entityClass
      */
-    private void remove(List<String> ids,String collectionName){
+    private void remove(List<String> ids,Class<?> entityClass){
         if(ids.size() > 0){
             Query query = new Query();
             Criteria criteria = new Criteria();
             criteria.and("id").in(ids);
             query.addCriteria(criteria);
-            mongoTemplate.remove(query,collectionName);
+//            mongoTemplate.findAllAndRemove(query,entityClass);
+            mongoTemplate.remove(query,entityClass);
         }
+
+//        // 测试发现remove是异步的，需要remove完了在insert，不然出现duplicate key 错误
+//        try {
+//            Thread.sleep(2000L);
+//        } catch (InterruptedException e) {
+//            LOGGER.error(e.getMessage(),e);
+//        }
     }
 
     @Override
