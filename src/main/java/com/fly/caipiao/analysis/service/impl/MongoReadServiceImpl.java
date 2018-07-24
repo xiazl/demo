@@ -85,7 +85,7 @@ public class MongoReadServiceImpl implements MongoReadService {
 
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, PV_COLLECTION_NAME, VisitVO.class);
@@ -110,8 +110,8 @@ public class MongoReadServiceImpl implements MongoReadService {
 
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
 
-        Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,skipOperation,
-                limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+        Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,sortOperation,
+                skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, UV_COLLECTION_NAME, VisitVO.class);
@@ -135,7 +135,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         ProjectionOperation resultOperation = Aggregation.project("count").and("date").previousOperation();
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,
-                resultOperation,skipOperation,limitOperation,sortOperation);
+                resultOperation,sortOperation,skipOperation,limitOperation);
 
         AggregationResults<DateVisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, UV_COLLECTION_NAME, DateVisitVO.class);
         return PageHelp.getDataResult(aggregationResults.getMappedResults(),size);
@@ -161,7 +161,7 @@ public class MongoReadServiceImpl implements MongoReadService {
 
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, RESOURCE_COLLECTION_NAME, VisitVO.class);
@@ -226,7 +226,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
 
         Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,
-                skipOperation, limitOperation,sortOperation).withOptions(Aggregation.newAggregationOptions().
+                sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
 
         AggregationResults<VisitVO> aggregationResults = mongoTemplate.aggregate(aggregation, PLATFORM_COLLECTION_NAME, VisitVO.class);
