@@ -98,7 +98,8 @@ public class MongoReadServiceImpl implements MongoReadService {
         Criteria criteria =this.getCriteria(conditionVO,"targetUrl");
         MatchOperation matchOperation = Aggregation.match(criteria);
 
-        ProjectionOperation projectionOperation = Aggregation.project("targetUrl","count").and("name").previousOperation();
+        ProjectionOperation projectionOperation = Aggregation.project("count")
+                .and("_id").as("name");
         GroupOperation groupOperation = Aggregation.group("targetUrl").sum("count").as("count");
 
         long size = mongoTemplate.aggregate(Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation)

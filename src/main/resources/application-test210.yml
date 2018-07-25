@@ -5,22 +5,6 @@ server:
   port: 8070
   tomcat.uri-encoding: UTF-8
 
-datasource:
-  type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
-  write:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
-    username: caipiao
-    password: F%46tff%^#@e
-  read:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
-    username: caipiao
-    password: F%46tff%^#@e
-  phoenix:
-    driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
-    url: jdbc:phoenix:127.0.0.1
-
 spring:
   data:
     mongodb:
@@ -43,6 +27,22 @@ spring:
         max-total: 600
         max-wait: 1000ms
     timeout: 3000ms
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
+    write:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
+      username: caipiao
+      password: F%46tff%^#@e
+    read:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.10.210:3306/cdn_log?useUnicode=true&amp;characterEncoding=utf-8
+      username: caipiao
+      password: F%46tff%^#@e
+    phoenix:
+      driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
+      url: jdbc:phoenix:127.0.0.1
 
 # MyBatis
 mybatis:

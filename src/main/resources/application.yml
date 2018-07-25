@@ -31,6 +31,21 @@ spring:
       root-dir:
       port:
 
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
+    write:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+      username: caipiao
+      password: F%46tff%^#@e
+    read:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+      username: caipiao
+      password: F%46tff%^#@e
+    phoenix:
+      driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
+      url: jdbc:phoenix:127.0.0.1
 
 
 #    cassandra:
@@ -38,22 +53,6 @@ spring:
 #      port: 9042
 #      cluster-name: Test Cluster
 #      keyspace-name:
-
-datasource:
-  type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
-  write:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
-    username: caipiao
-    password: F%46tff%^#@e
-  read:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
-    username: caipiao
-    password: F%46tff%^#@e
-  phoenix:
-    driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
-    url: jdbc:phoenix:127.0.0.1
 
 
 # MyBatis

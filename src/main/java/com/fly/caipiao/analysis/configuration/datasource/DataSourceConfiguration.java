@@ -30,23 +30,23 @@ import java.util.Map;
 public class DataSourceConfiguration {
     private static Logger logger = LoggerFactory.getLogger(DataSourceConfiguration.class);
 
-    @Value("${datasource.type}")
+    @Value("${spring.datasource.type}")
     private Class<? extends DataSource> dataSourceType;
 
     @Bean({"writeDataSourceProperties", "properties"})
-    @ConfigurationProperties(prefix = "datasource.write")
+    @ConfigurationProperties(prefix = "spring.datasource.write")
     public DataSourceProperties writeDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean("readDataSourceProperties")
-    @ConfigurationProperties(prefix = "datasource.read")
+    @ConfigurationProperties(prefix = "spring.datasource.read")
     public DataSourceProperties readDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean("phoenixDataSourceProperties")
-    @ConfigurationProperties(prefix = "datasource.phoenix")
+    @ConfigurationProperties(prefix = "spring.datasource.phoenix")
     public DataSourceProperties phoenixDataSourceProperties() {
         return new DataSourceProperties();
     }

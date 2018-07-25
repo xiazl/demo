@@ -1,0 +1,1 @@
+create 'cdn_logs',{NAME => 'USER'}

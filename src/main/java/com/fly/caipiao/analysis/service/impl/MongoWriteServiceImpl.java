@@ -217,11 +217,9 @@ public class MongoWriteServiceImpl implements MongoWriteService {
             Criteria criteria = new Criteria();
             criteria.and("id").in(ids);
             query.addCriteria(criteria);
-//            mongoTemplate.findAllAndRemove(query,entityClass);
             mongoTemplate.remove(query,entityClass);
         }
 
-//        // 测试发现remove是异步的，需要remove完了在insert，不然出现duplicate key 错误
 //        try {
 //            Thread.sleep(2000L);
 //        } catch (InterruptedException e) {
