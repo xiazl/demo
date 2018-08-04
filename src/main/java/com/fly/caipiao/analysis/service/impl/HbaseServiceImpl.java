@@ -40,15 +40,14 @@ public class HbaseServiceImpl implements HbaseService {
     private static final String TABLE_NAME = "cdn_logs";
     private static final String FAMILY_NAME = "USER";
     private static final Integer DEFAULT_STATUS = 0;
-    private static final Random random = new Random();
-    private final static Integer CORE_POOL_SIZE = 1;
-    private final static Integer MAXIMUM_POOL_SIZE = 1;
-    private final static Long KEEP_ALIVE_TIME = 300L;
-    /**  防止连续导入时，数据计算先后顺序的问题，这里暂时限制为单线程 */
+    private final static Integer CORE_POOL_SIZE = 5;
+    private final static Integer MAXIMUM_POOL_SIZE = 5;
+    private final static Long KEEP_ALIVE_TIME = 30L; // 无效
+
     private final static ExecutorService EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
             KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue());
 
-//    private final static CompletionService<Long> COMPLETIONSERVICE = new ExecutorCompletionService<>(EXECUTOR);
+//    private final static CompletionService<Long> COMPLETION_SERVICE = new ExecutorCompletionService<>(EXECUTOR);
 
     @Autowired
     private MongoWriteService mongoWriteService;
@@ -120,16 +119,18 @@ public class HbaseServiceImpl implements HbaseService {
 
                 Put put = new Put(entity.getId().getBytes());
                 /**  因为适用phoenix的缘故，字段名都用大写了，使用上比较方便一点  */
-                put.addColumn(FAMILY_NAME.getBytes(), "IP".getBytes(), Bytes.toBytes(entity.getIp()));
+                put.addColumn(FAMILY_NAME.getBytes(), "IP".getBytes(), this.getBytes(entity.getIp()));
                 put.addColumn(FAMILY_NAME.getBytes(), "DATE_TIME".getBytes(), Bytes.toBytes(entity.getDateTime()));
                 put.addColumn(FAMILY_NAME.getBytes(), "REFERER".getBytes(), this.getBytes(entity.getReferer()));
-                put.addColumn(FAMILY_NAME.getBytes(), "TARGET_URL".getBytes(), Bytes.toBytes(entity.getTargetUrl()));
+                put.addColumn(FAMILY_NAME.getBytes(), "TARGET_URL".getBytes(), this.getBytes(entity.getTargetUrl()));
                 put.addColumn(FAMILY_NAME.getBytes(), "CREATE_TIME".getBytes(), Bytes.toBytes(timeMillis));
 
                 lists.add(put);
             }
 
-            table.put(lists);
+            if(lists.size() > 0) {
+                table.put(lists);
+            }
             table.close();
 
         } catch (Exception e) {
@@ -168,7 +169,69 @@ public class HbaseServiceImpl implements HbaseService {
 
     @Override
     public void aggregationStatistics(Long time){
-        new Thread(new AggregationThread(time)).start();
+        List<Future<Long>> result = new ArrayList<>();
+
+        result.add(EXECUTOR.submit(new PvThread(time, phoenixService, mongoWriteService)));
+        result.add(EXECUTOR.submit(new UvThread(time, phoenixService, mongoWriteService)));
+        result.add(EXECUTOR.submit(new PlatformThread(time, phoenixService, mongoWriteService)));
+        result.add(EXECUTOR.submit(new ResourceThread(time, phoenixService, mongoWriteService)));
+        result.add(EXECUTOR.submit(new ResourcePlatformThread(time, phoenixService, mongoWriteService)));
+
+        try {
+            for (int i = 0; i < 5; i++) {
+                Long returnValue = result.get(0).get();
+
+                switch (i) {
+                    case 0:
+                        if (returnValue != null) {
+                            this.saveErrorRecord(returnValue, "PV");
+                        }
+                        break;
+                    case 1:
+                        if (returnValue != null) {
+                            this.saveErrorRecord(returnValue, "UV");
+                        }
+                        break;
+                    case 2:
+                        if (returnValue != null) {
+                            this.saveErrorRecord(returnValue, "platform");
+                        }
+                        break;
+                    case 3:
+                        if (returnValue != null) {
+                            this.saveErrorRecord(returnValue, "resource");
+                        }
+                        break;
+                    case 4:
+                        if (returnValue != null) {
+                            this.saveErrorRecord(returnValue, "resource_platform");
+                        }
+                        break;
+
+                    default:
+                }
+            }
+
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        LOGGER.info("Aggregation Statistics Success!!!");
+    }
+
+    /**
+     * 记录计算失败的记录，发现后手动重复处理
+     * @param time
+     * @param message
+     */
+    private void saveErrorRecord(Long time,String message){
+        ErrorRecord record = new ErrorRecord();
+        record.setCreateTime(new Date());
+        record.setName(message);
+        record.setStatus(DEFAULT_STATUS);
+        record.setTime(time);
+
+        errorRecordMapper.insert(record);
     }
 
     protected class AggregationThread implements Runnable{
@@ -181,69 +244,7 @@ public class HbaseServiceImpl implements HbaseService {
 
         @Override
         public void run() {
-            List<Future<Long>> result = new ArrayList<>();
 
-            result.add(EXECUTOR.submit(new PvThread(time, phoenixService, mongoWriteService)));
-            result.add(EXECUTOR.submit(new UvThread(time, phoenixService, mongoWriteService)));
-            result.add(EXECUTOR.submit(new PlatformThread(time, phoenixService, mongoWriteService)));
-            result.add(EXECUTOR.submit(new ResourceThread(time, phoenixService, mongoWriteService)));
-            result.add(EXECUTOR.submit(new ResourcePlatformThread(time, phoenixService, mongoWriteService)));
-
-            try {
-                for (int i = 4; i < 5; i++) {
-                    Long returnValue = result.get(0).get();
-
-                    switch (i) {
-                        case 0:
-                            if (returnValue != null) {
-                                this.saveErrorRecord(returnValue, "PV");
-                            }
-                            break;
-                        case 1:
-                            if (returnValue != null) {
-                                this.saveErrorRecord(returnValue, "UV");
-                            }
-                            break;
-                        case 2:
-                            if (returnValue != null) {
-                                this.saveErrorRecord(returnValue, "platform");
-                            }
-                            break;
-                        case 3:
-                            if (returnValue != null) {
-                                this.saveErrorRecord(returnValue, "resource");
-                            }
-                            break;
-                        case 4:
-                            if (returnValue != null) {
-                                this.saveErrorRecord(returnValue, "resource_platform");
-                            }
-                            break;
-
-                        default:
-                    }
-                }
-
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-
-            LOGGER.info("Aggregation Statistics Success!!!");
-        }
-
-        /**
-         * 记录计算失败的记录，发现后手动重复处理
-         * @param time
-         * @param message
-         */
-        private void saveErrorRecord(Long time,String message){
-            ErrorRecord record = new ErrorRecord();
-            record.setCreateTime(new Date());
-            record.setName(message);
-            record.setStatus(DEFAULT_STATUS);
-            record.setTime(time);
-
-            errorRecordMapper.insert(record);
         }
     }
 

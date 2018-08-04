@@ -15,6 +15,7 @@ public interface TestService {
      * 查询
      * @return
      */
+    @Deprecated
     List<CDNLogEntity> find();
 
     /**
@@ -22,18 +23,21 @@ public interface TestService {
      * @param query
      * @return
      */
+    @Deprecated
     CDNLogEntity findOne(Query query);
 
     /**
      * 单个插入
      * @param userEntity
      */
+    @Deprecated
     void insert(CDNLogEntity userEntity);
 
     /**
      * 批量插入
      * @param entities
      */
+    @Deprecated
     void insertBatch(List<CDNLogEntity> entities, List<String> ids, Long timeMillis);
 
     /**
@@ -41,4 +45,10 @@ public interface TestService {
      */
     @Deprecated
     void clear();
+
+    /**
+     * 数据处理
+     */
+    @Deprecated
+    void repair();
 }

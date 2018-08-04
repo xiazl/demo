@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  **/
 public class UvThread implements Callable<Long> {
     private final static Logger LOGGER = LoggerFactory.getLogger(UvThread.class);
-    private static final Integer SIZE = 50000;
+    private static final Integer SIZE = 5000;
 
     private Long time;
     private PhoenixService phoenixService;
@@ -35,14 +35,14 @@ public class UvThread implements Callable<Long> {
         pageBean.setiDisplayLength(SIZE);
         try {
             PageDataResult<UvStatistics> list = phoenixService.aggregationUv(pageBean,time);
-            mongoWriteService.insertBatchUv(list.getData());
+            mongoWriteService.insertBatchUv(list.getAaData());
 
             int pages = (int) (list.getiTotalRecords()/SIZE + 1);
             if(pages > 1){
                 for(int page = 2;page <= pages; page ++){
                     pageBean.setiDisplayStart((long) ((page -1)*SIZE));
                     list = phoenixService.aggregationUv(pageBean,time);
-                    mongoWriteService.insertBatchUv(list.getData());
+                    mongoWriteService.insertBatchUv(list.getAaData());
                 }
             }
         } catch (Exception e) {

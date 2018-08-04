@@ -83,7 +83,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SkipOperation skipOperation = Aggregation.skip(pageBean.getiDisplayStart());
         LimitOperation limitOperation = Aggregation.limit(pageBean.getiDisplayLength());
 
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
+        SortOperation sortOperation = this.sortOperate(pageBean);
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
                 sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
@@ -109,7 +109,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SkipOperation skipOperation = Aggregation.skip(pageBean.getiDisplayStart());
         LimitOperation limitOperation = Aggregation.limit(pageBean.getiDisplayLength());
 
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
+        SortOperation sortOperation = this.sortOperate(pageBean);
 
         Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,sortOperation,
                 skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
@@ -160,7 +160,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SkipOperation skipOperation = Aggregation.skip(pageBean.getiDisplayStart());
         LimitOperation limitOperation = Aggregation.limit(pageBean.getiDisplayLength());
 
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
+        SortOperation sortOperation = this.sortOperate(pageBean);
         Aggregation aggregation = Aggregation.newAggregation(matchOperation,groupOperation,projectionOperation,
                 sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
                 allowDiskUse(true).build());
@@ -224,7 +224,7 @@ public class MongoReadServiceImpl implements MongoReadService {
         SkipOperation skipOperation = Aggregation.skip(pageBean.getiDisplayStart());
         LimitOperation limitOperation = Aggregation.limit(pageBean.getiDisplayLength());
 
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"count");
+        SortOperation sortOperation = this.sortOperate(pageBean);
 
         Aggregation aggregation = Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation,
                 sortOperation,skipOperation, limitOperation).withOptions(Aggregation.newAggregationOptions().
@@ -340,6 +340,22 @@ public class MongoReadServiceImpl implements MongoReadService {
         }
 
         return list;
+    }
+
+    /**
+     * 排序
+     */
+    public SortOperation sortOperate(PageBean pageBean){
+        String sortProperty;
+        if(pageBean.getiSortCol_0() !=1){
+            sortProperty = "name";
+        } else {
+            sortProperty = "count";
+        }
+        SortOperation sortOperation = Aggregation.sort(Sort.Direction.fromString(
+                pageBean.getsSortDir_0()),sortProperty);
+
+        return sortOperation;
     }
 
     /**

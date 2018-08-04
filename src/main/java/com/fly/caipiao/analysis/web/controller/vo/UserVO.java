@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
  **/
 public class UserVO {
     private Integer id;
-    // 旧密码
     @NotNull(message = "用户名不能为空")
     @Length(min=5,max = 15,message = "用户名为5～15位字符")
     private String username;

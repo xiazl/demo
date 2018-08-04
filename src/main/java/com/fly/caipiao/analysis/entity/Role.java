@@ -10,7 +10,7 @@ public class Role {
     private String name;
     private String sort;
     private String desc;
-    private String statusFlag;
+    private Integer statusFlag;
 
     public Integer getId() {
         return id;
@@ -44,11 +44,11 @@ public class Role {
         this.desc = desc;
     }
 
-    public String getStatusFlag() {
+    public Integer getStatusFlag() {
         return statusFlag;
     }
 
-    public void setStatusFlag(String statusFlag) {
+    public void setStatusFlag(Integer statusFlag) {
         this.statusFlag = statusFlag;
     }
 }

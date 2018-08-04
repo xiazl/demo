@@ -28,6 +28,7 @@ public interface UserService {
      * 用户查询
      */
     User getById(Integer id);
+
     /**
      * 用户删除
      */

@@ -9,7 +9,7 @@ public class UserRole {
     private Integer id;
     private Integer userId;
     private Integer roleId;
-    private String statusFlag;
+    private Integer statusFlag;
 
     public Integer getId() {
         return id;
@@ -35,11 +35,11 @@ public class UserRole {
         this.roleId = roleId;
     }
 
-    public String getStatusFlag() {
+    public Integer getStatusFlag() {
         return statusFlag;
     }
 
-    public void setStatusFlag(String statusFlag) {
+    public void setStatusFlag(Integer statusFlag) {
         this.statusFlag = statusFlag;
     }
 }

@@ -22,9 +22,14 @@ public class DataController {
 
     @RequestMapping("/index")
     public String index() {
-        return "log_analysis";
+        return "log/log_analysis.html";
     }
 
+    /**
+     * 文件文件分析
+     * @param fileName
+     * @return
+     */
     @RequestMapping("/analysis")
     @ResponseBody
     public Result analysis(String fileName){
@@ -32,6 +37,10 @@ public class DataController {
         return ResponseData.success();
     }
 
+    /**
+     * 分析所有的日志文件
+     * @return
+     */
     @RequestMapping("/analysisAll")
     @ResponseBody
     public Result analysis(){

@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  **/
 public class PvThread implements Callable<Long> {
     private final static Logger LOGGER = LoggerFactory.getLogger(PvThread.class);
-    private static final Integer SIZE = 50000;
+    private static final Integer SIZE = 5000;
 
 
     private Long time;
@@ -36,14 +36,14 @@ public class PvThread implements Callable<Long> {
         pageBean.setiDisplayLength(SIZE);
         try {
             PageDataResult<PvStatistics> list = phoenixService.aggregationPv(pageBean,time);
-            mongoWriteService.insertBatchPv(list.getData());
+            mongoWriteService.insertBatchPv(list.getAaData());
 
             int pages = (int) (list.getiTotalRecords()/SIZE + 1);
             if(pages > 1){
                 for(int page = 2;page <= pages; page ++){
                     pageBean.setiDisplayStart((long) ((page -1)*SIZE));
                     list = phoenixService.aggregationPv(pageBean,time);
-                    mongoWriteService.insertBatchPv(list.getData());
+                    mongoWriteService.insertBatchPv(list.getAaData());
                 }
             }
         } catch (Exception e) {

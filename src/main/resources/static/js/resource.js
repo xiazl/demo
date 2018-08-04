@@ -5,7 +5,7 @@ var table = $('#resourceTable').DataTable(
         "bScrollCollapse" : true,
         "bLengthChange" : true,
         "bFilter" : true,  // 搜索栏
-        "bSort" : true,    // 是否支持排序功能
+        "bSort" : false,    // 是否支持排序功能
         "bInfo" : true,
         "bAutoWidth" : true,
         "bDestroy" : true,

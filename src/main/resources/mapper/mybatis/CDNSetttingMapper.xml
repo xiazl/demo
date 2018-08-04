@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.CDNSettingMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.CDNSetting" >
+       <id column="id" property="id" />
+       <result column="domain" property="domain"/>
+       <result column="key" property="key"/>
+       <result column="secret" property="secret"/>
+       <result column="status_flag" property="statusFlag"/>
+       <result column="create_time" property="createTime"/>
+   </resultMap>
+
+    <insert id="insert" parameterType="com.fly.caipiao.analysis.entity.CDNSetting" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into `cdn_setting` (`domain`,`key`,secret,status_flag,create_time)
+        values (#{domain},#{key},#{secret},#{statusFlag},#{createTime})
+    </insert>
+
+    <update id="update">
+        update `cdn_setting` set status_flag = status_flag
+        <if test="key!=null and key.length() > 0">
+            ,`key`=#{key}
+        </if>
+        <if test="secret!=null and secret.length() > 0">
+            ,secret=#{secret}
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update `cdn_setting` set status_flag=1
+        where id = #{id}
+    </update>
+
+    <select id="getByDomain" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select id,`domain`,`key`,secret
+        from `cdn_setting`
+        where `domain` = #{domain} and status_flag=0 limit 1
+    </select>
+
+    <select id="checkDomain" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select 1
+        from `cdn_setting`
+        where `domain` = #{domain} limit 1
+    </select>
+
+    <select id="getById" resultType="com.fly.caipiao.analysis.entity.CDNSetting">
+        select id,`domain`,`key`,secret
+        from `cdn_setting`
+		where id = #{id} and status_flag=0
+    </select>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.CDNSetting">
+        select id,`domain`,`key`,secret
+        from `cdn_setting`
+        where status_flag = 0
+        <if test="sSearch!=null and sSearch.length() > 0" >
+            and `domain` like concat('%',#{sSearch},'%')
+        </if>
+    </select>
+
+    <select id="listDomain" resultType="java.lang.String">
+        select `domain` from `cdn_setting` where status_flag = 0
+    </select>
+
+</mapper>

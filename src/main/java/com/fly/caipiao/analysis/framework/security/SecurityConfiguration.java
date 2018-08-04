@@ -35,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()  // 配置安全策略
-                .antMatchers("/css/**","/js/**","/sb/**")
+                .antMatchers("/css/**","/img/**","/js/**","/sb/**")
                 .permitAll()          // 静态资源和不需要验证的URL
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .anyRequest().authenticated()   //其余的所有请求都需要验证

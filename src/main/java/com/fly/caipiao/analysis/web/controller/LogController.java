@@ -16,7 +16,6 @@ import com.fly.caipiao.analysis.vo.StatisticsVO;
 import com.fly.caipiao.analysis.vo.VisitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -44,46 +43,33 @@ public class LogController {
 
     @RequestMapping("/index")
     public String index() {
-        return "log_detail";
+        return "log/log_detail";
     }
 
     @RequestMapping("/indexPv")
     public String indexPv() {
-        return "log_pv";
+        return "log/log_pv";
     }
 
     @RequestMapping("/indexUv")
     public String indexUv() {
-        return "log_uv";
+        return "log/log_uv";
     }
 
     @RequestMapping("/indexDate")
     public String indexDate() {
-        return "log_date";
+        return "log/log_date";
     }
 
     @RequestMapping("/indexResource")
     public String indexResource() {
-        return "log_resource";
+        return "log/log_resource";
     }
 
     @RequestMapping("/indexPlatform")
     public String indexPlatform()
     {
-        return "log_platform";
-    }
-
-    @RequestMapping("/resourceDetail")
-    public String indexResource(Model model,String name) {
-        model.addAttribute("name",name);
-        return "log_platform_detail";
-    }
-
-    @RequestMapping("/platformDetail")
-    public String indexPlatform(Model model,String name)
-    {
-        model.addAttribute("name",name);
-        return "log_resource_detail";
+        return "log/log_platform";
     }
 
     @RequestMapping("/indexUser")
@@ -151,15 +137,15 @@ public class LogController {
 
         List<StatisticsVO> uvList = mongoReadService.listByDate(xkeys.get(0),xkeys.get(length-1),UV_COLLECTION_NAME);
 
-        List<StatisticsVO> list = new ArrayList<>();
-        list.addAll(pvList);
-        list.addAll(uvList);
+
 
         Map<String,Object> map = new HashMap<>();
-        for(StatisticsVO vo : list){
-            for(String ykey: ykeys) {
-                map.put(vo.getTime() + ykey, vo.getCount());
-            }
+        for(StatisticsVO vo : pvList){
+            map.put(vo.getTime() + ykeys[0], vo.getCount());
+        }
+
+        for(StatisticsVO vo : uvList){
+            map.put(vo.getTime() + ykeys[1], vo.getCount());
         }
 
         EChartVO chartVO = new EChartVO();
@@ -198,15 +184,13 @@ public class LogController {
 
         List<StatisticsVO> uvList = mongoReadService.listByMonth(xkeys.get(0),xkeys.get(length-1),UV_COLLECTION_NAME);
 
-        List<StatisticsVO> list = new ArrayList<>();
-        list.addAll(pvList);
-        list.addAll(uvList);
-
         Map<String,Object> map = new HashMap<>();
         for(StatisticsVO vo : pvList){
-            for(String ykey: ykeys) {
-                map.put(vo.getTime() + ykey, vo.getCount());
-            }
+            map.put(vo.getTime() + ykeys[0], vo.getCount());
+        }
+
+        for(StatisticsVO vo : uvList){
+            map.put(vo.getTime() + ykeys[1], vo.getCount());
         }
 
         EChartVO chartVO = new EChartVO();

@@ -9,6 +9,8 @@ public class FileVO {
 
     private String name;
     private Long size;
+    private String key;
+    private Integer status;
 
     public FileVO() {
     }
@@ -32,5 +34,21 @@ public class FileVO {
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

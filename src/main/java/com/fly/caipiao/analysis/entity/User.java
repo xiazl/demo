@@ -12,7 +12,7 @@ public class User {
     private String username;
     private String password;
     private String cellphone;
-    private String statusFlag;
+    private Integer statusFlag;
     private Date createTime;
 
     public Integer getId() {
@@ -47,11 +47,11 @@ public class User {
         this.cellphone = cellphone;
     }
 
-    public String getStatusFlag() {
+    public Integer getStatusFlag() {
         return statusFlag;
     }
 
-    public void setStatusFlag(String statusFlag) {
+    public void setStatusFlag(Integer statusFlag) {
         this.statusFlag = statusFlag;
     }
 

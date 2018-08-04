@@ -38,5 +38,4 @@ public interface RecordMapper {
      */
     List<Record> list(@Param("condition") ConditionVO conditionVO, @Param("type") Integer type);
 
-
 }

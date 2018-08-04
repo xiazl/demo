@@ -17,3 +17,19 @@ function layerMsg(msg, isSuccess, opts) {
     }
     layer.msg(msg, options);
 }
+
+function serverData(data){
+    return {"iDisplayStart":data.iDisplayStart,"iDisplayLength":data.iDisplayLength,
+        "sSearch":data.sSearch,"keyword":data.keyword};
+}
+
+function sortColumnName(i) {
+    switch (i){
+        case 0:
+            return "referer";
+        case 1:
+            return "targetUrl";
+        default:
+            break
+    }
+}

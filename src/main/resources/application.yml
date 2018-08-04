@@ -35,24 +35,17 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
     write:
       driverClassName: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
-      username: caipiao
-      password: F%46tff%^#@e
+      url: jdbc:mysql://localhost:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+      username: root
+      password: 1234qwer
     read:
       driverClassName: com.mysql.jdbc.Driver
-      url: jdbc:mysql://172.16.10.210:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
-      username: caipiao
-      password: F%46tff%^#@e
+      url: jdbc:mysql://localhost:3306/test_analysis?useUnicode=true&amp;characterEncoding=utf-8
+      username: root
+      password: 1234qwer
     phoenix:
       driverClassName: org.apache.phoenix.jdbc.PhoenixDriver
       url: jdbc:phoenix:127.0.0.1
-
-
-#    cassandra:
-#      contact-points: 127.0.0.1
-#      port: 9042
-#      cluster-name: Test Cluster
-#      keyspace-name:
 
 
 # MyBatis
@@ -61,11 +54,6 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*.xml
     configuration:
       mapUnderscoreToCamelCase: true
-
-spark:
-  master: spark://admindeMBP.lan:7077
-
-
 
 #logger
 logging:

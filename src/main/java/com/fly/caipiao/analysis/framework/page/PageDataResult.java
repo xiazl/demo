@@ -21,7 +21,7 @@ public class PageDataResult<T> {
 	/**
 	 * An array that contains the actual objects
 	 */
-	private List<T> data = null;
+	private List<T> aaData = null;
 
 	public Long getiTotalRecords() {
 		return iTotalRecords;
@@ -39,11 +39,11 @@ public class PageDataResult<T> {
 		this.iTotalDisplayRecords = iTotalDisplayRecords;
 	}
 
-	public List<T> getData() {
-		return data;
+	public List<T> getAaData() {
+		return aaData;
 	}
 
-	public void setData(List<T> data) {
-		this.data = data;
+	public void setAaData(List<T> aaData) {
+		this.aaData = aaData;
 	}
 }

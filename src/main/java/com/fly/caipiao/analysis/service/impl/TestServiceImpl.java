@@ -1,6 +1,10 @@
 package com.fly.caipiao.analysis.service.impl;
 
+import com.fly.caipiao.analysis.common.utils.MD5Encrypt;
 import com.fly.caipiao.analysis.entity.CDNLogEntity;
+import com.fly.caipiao.analysis.entity.LogDownloadRecord;
+import com.fly.caipiao.analysis.framework.page.ConditionVO;
+import com.fly.caipiao.analysis.mapper.LogDownloadRecordMapper;
 import com.fly.caipiao.analysis.service.HbaseService;
 import com.fly.caipiao.analysis.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,9 @@ public class TestServiceImpl implements TestService {
     private MongoTemplate mongoTemplate;
     @Autowired
     private HbaseService hbaseService;
+
+    @Autowired
+    private LogDownloadRecordMapper recordMapper;
 
     @Override
     public List find() {
@@ -65,5 +72,16 @@ public class TestServiceImpl implements TestService {
         mongoTemplate.dropCollection(RESOURCE_PLATFORM_COLLECTION_NAME);
 
     }
+
+    @Override
+    public void repair() {
+        List<LogDownloadRecord> list = recordMapper.list(new ConditionVO());
+        for (LogDownloadRecord record : list){
+            record.setKey(MD5Encrypt.getEncrypt().encode(record.getName()));
+        }
+
+        recordMapper.updateBatch(list);
+    }
+
 
 }

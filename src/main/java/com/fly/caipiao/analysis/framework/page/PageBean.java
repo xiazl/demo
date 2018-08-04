@@ -22,7 +22,14 @@ public class PageBean {
      */
     private Integer iDisplayLength = 50;
 
+    private Integer iSortCol_0; // 排序字段
+
+    private String sSortDir_0; // 排序方式
+
     public Integer getCurrent() {
+        if(iDisplayLength == 0){
+            return 1;
+        }
         return (int)(iDisplayStart/iDisplayLength+1);
     }
 
@@ -46,4 +53,19 @@ public class PageBean {
         this.iDisplayLength = iDisplayLength;
     }
 
+    public Integer getiSortCol_0() {
+        return iSortCol_0;
+    }
+
+    public void setiSortCol_0(Integer iSortCol_0) {
+        this.iSortCol_0 = iSortCol_0;
+    }
+
+    public String getsSortDir_0() {
+        return sSortDir_0;
+    }
+
+    public void setsSortDir_0(String sSortDir_0) {
+        this.sSortDir_0 = sSortDir_0;
+    }
 }

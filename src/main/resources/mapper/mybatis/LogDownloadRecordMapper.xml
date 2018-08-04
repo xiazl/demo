@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fly.caipiao.analysis.mapper.LogDownloadRecordMapper">
+   <resultMap id="BaseResultMap" type="com.fly.caipiao.analysis.entity.LogDownloadRecord" >
+       <id column="id" property="id" />
+       <result column="name" property="name"/>
+       <result column="size" property="size"/>
+       <result column="key" property="key"/>
+       <result column="log_path" property="logPath"/>
+       <result column="status_flag" property="statusFlag"/>
+       <result column="create_time" property="createTime"/>
+   </resultMap>
+
+    <insert id="insert">
+        insert into log_download_record (`name`,`size`,`key`,`log_path`,`status_flag`)
+        values (#{name},#{size},#{key},#{logPath},#{statusFlag})
+    </insert>
+
+    <select id="list" resultType="com.fly.caipiao.analysis.entity.LogDownloadRecord">
+        select id,`name`,`size`,create_time,status_flag,log_path
+        from `log_download_record` where 1 = 1
+        <if test="sSearch!=null and sSearch.length() > 0" >
+            and `name` like concat('%',#{sSearch},'%')
+        </if>
+        <if test="keyword!=null and keyword.length() > 0" >
+            and `status_flag` = #{keyword}
+        </if>
+    </select>
+
+    <select id="queryByNameKey" resultType="java.lang.Integer">
+        select count(1) from log_download_record where `key` = #{key}
+    </select>
+
+    <select id="queryByKeys" resultType="java.lang.String">
+        select `key` from `log_download_record` where `key` in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item.key}
+        </foreach>
+    </select>
+
+    <update id="updateBatch">
+        update log_download_record set `key`=
+        case id
+        <foreach collection="list" item="item">
+            when #{item.id} then #{item.key}
+        </foreach>
+        end
+        where id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updateByKey">
+        update log_download_record set `status_flag`= 0 where `key` = #{key}
+    </update>
+
+
+</mapper>

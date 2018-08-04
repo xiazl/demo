@@ -89,4 +89,19 @@ public class DateUtils {
         }
 
     }
+
+    /**
+     * 时间转换为字符串
+     * @param date
+     * @param dateFormatPattern
+     * @return
+     */
+    public static String format(Date date, String dateFormatPattern) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern);
+        dateFormat.setLenient(false);
+        return dateFormat.format(date);
+    }
 }

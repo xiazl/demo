@@ -31,16 +31,32 @@ CREATE TABLE `data_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
---  Table structure for `log_file`
+--  Table structure for `log_download_record`
 -- ----------------------------
-DROP TABLE IF EXISTS `log_file`;
-CREATE TABLE `log_file` (
+DROP TABLE IF EXISTS `log_download_record`;
+CREATE TABLE `log_download_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-  `name` varchar(120) DEFAULT '' COMMENT '文件名',
+  `name` varchar(120) NOT NULL DEFAULT '' COMMENT '文件名',
   `size` int(11) DEFAULT NULL COMMENT '文件大小',
+  `key` varchar(32) NOT NULL COMMENT 'name md5后的值',
+  `log_path` varchar(120) DEFAULT NULL COMMENT '下载路径',
+  `status_flag` tinyint(2) DEFAULT '0' COMMENT '状态 0 正常 -1 下载失败',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件分析记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件下载记录'
+
+-- ----------------------------
+--  Table structure for `log_import_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `log_import_record`;
+CREATE TABLE `log_import_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `name` varchar(120) NOT NULL DEFAULT '' COMMENT '文件名',
+  `size` int(11) DEFAULT NULL COMMENT '文件大小',
+  `key` varchar(32) NOT NULL COMMENT 'name md5后的值',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件分析记录'
 
 -- ----------------------------
 --  Table structure for `record`
@@ -67,7 +83,7 @@ CREATE TABLE `role` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 --  Records of `role`
@@ -89,7 +105,7 @@ CREATE TABLE `user` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 --  Records of `user`
@@ -110,7 +126,7 @@ CREATE TABLE `user_role` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户权限表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户权限表';
 
 -- ----------------------------
 --  Records of `user_role`
@@ -130,6 +146,20 @@ CREATE TABLE `error_record` (
   `status` tinyint(2) DEFAULT '0' COMMENT '0 未处理；1 已处理',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='导入时按天统计失败的记录';
+
+-- ----------------------------
+--  Table structure for `cdn_setting`
+-- ----------------------------
+CREATE TABLE `cdn_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `domain` varchar(40) DEFAULT NULL COMMENT '域名',
+  `key` varchar(40) DEFAULT NULL COMMENT '域名对应的AccessKeyId',
+  `secret` varchar(60) DEFAULT NULL COMMENT '域名对应的AccessKeySecret',
+  `status_flag` tinyint(2) DEFAULT '0' COMMENT '状态 0 正常 1 删除',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='CDN域名配置记录'
+
 
 SET FOREIGN_KEY_CHECKS = 1;

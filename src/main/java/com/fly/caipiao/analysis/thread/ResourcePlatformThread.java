@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  **/
 public class ResourcePlatformThread implements Callable<Long> {
     private final static Logger LOGGER = LoggerFactory.getLogger(ResourcePlatformThread.class);
-    private static final Integer SIZE = 50000;
+    private static final Integer SIZE = 5000;
 
     private Long time;
     private PhoenixService phoenixService;
@@ -35,14 +35,14 @@ public class ResourcePlatformThread implements Callable<Long> {
         pageBean.setiDisplayLength(SIZE);
         try {
             PageDataResult<ResourcePlatformStatistics> list = phoenixService.aggregationResourcePlatform(pageBean,time);
-            mongoWriteService.insertBatchResourcePlatform(list.getData());
+            mongoWriteService.insertBatchResourcePlatform(list.getAaData());
 
             int pages = (int) (list.getiTotalRecords()/SIZE + 1);
             if(pages > 1){
                 for(int page = 2;page <= pages; page ++){
                     pageBean.setiDisplayStart((long) ((page -1)*SIZE));
                     list = phoenixService.aggregationResourcePlatform(pageBean,time);
-                    mongoWriteService.insertBatchResourcePlatform(list.getData());
+                    mongoWriteService.insertBatchResourcePlatform(list.getAaData());
                 }
             }
         } catch (Exception e) {

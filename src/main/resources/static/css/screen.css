@@ -31,3 +31,13 @@ a:hover {
     text-decoration: none;
 }
 
+table.dataTable .row-details.row-details-close {
+    /**图片位置 根据实际情况自行设定**/
+    background: url(../img/datatable-row-openclose.png) no-repeat 0 0;
+}
+
+table.dataTable .row-details.row-details-open {
+    background: url(../img/datatable-row-openclose.png) no-repeat 0 -23px !important;
+}
+
+

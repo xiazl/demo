@@ -19,7 +19,7 @@ public class PageHelp {
 	 */
 	public final static <T> PageDataResult<T> getDataResult(List<T> data) {
 		PageDataResult<T> dataResult = new PageDataResult<>();
-		dataResult.setData(data);
+		dataResult.setAaData(data);
 
 		PageInfo<T> page = new PageInfo<T>(data);
 		dataResult.setiTotalRecords(page.getTotal());
@@ -36,7 +36,7 @@ public class PageHelp {
 	 */
 	public final static <T> PageDataResult<T> getDataResult(List<T> data, Long size) {
 		PageDataResult<T> dataResult = new PageDataResult<>();
-		dataResult.setData(data);
+		dataResult.setAaData(data);
 
 		dataResult.setiTotalRecords(size);
         dataResult.setiTotalDisplayRecords(size);

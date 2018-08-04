@@ -1,6 +1,6 @@
 
 $().ready(function () {
-    $("#userAddForm").validate({
+    var validator = $("#userAddForm").validate({
         rules: {
             username: {
                 required: true,
@@ -10,7 +10,7 @@ $().ready(function () {
         },
         messages: {
             username: {
-                required: "用户名不能唯空",
+                required: "用户名不能为空",
                 minlength: "用户名不能少于5个字符",
                 maxlength: "用户名不能多余15个字符"
             }
@@ -24,7 +24,7 @@ $().ready(function () {
             "bScrollCollapse": true,
             "bLengthChange": true,
             "bFilter": true,  // 搜索栏
-            "bSort": true,    // 是否支持排序功能
+            "bSort": false,    // 是否支持排序功能
             "bInfo": true,
             "bAutoWidth": true,
             "bDestroy": true,
@@ -78,6 +78,7 @@ $().ready(function () {
             }
         });
 
+
     /**
      * 是否显示编辑按钮
      * @returns {*}
@@ -111,9 +112,9 @@ $().ready(function () {
             data: data,
         }).done(function (result) {
             if (result.code == "1000") {
-                layerMsg("删除成功",true)
-                table.ajax.reload();
-            } else {
+                layerMsg("删除成功",true);
+                table.draw(false);
+                } else {
                 layerMsg(result.message,false,{time: 3000})
             }
         }).fail(function () {
@@ -123,6 +124,7 @@ $().ready(function () {
 
     $("#myModalBtn").click(function() {
         $('#myModalLabel').text('添加用户');
+        validator.resetForm();
         $("#userAddForm")[0].reset();
         $('#username').attr('disabled',false);
         $('.modal-body .form-group').eq(1).removeClass('hidden')
@@ -147,8 +149,8 @@ $().ready(function () {
                 if (result.code == "1000") {
                     layerMsg('保存成功',true);
                     $("#myModal").modal('hide');
-                    table.ajax.reload();
-                } else {
+                    table.draw(false);
+                    } else {
                     layerMsg(result.message,false,{time: 3000})
                 }
             },
@@ -164,6 +166,8 @@ $().ready(function () {
         $('.modal-body .form-group').eq(1).addClass('hidden')
         $('.modal-body .form-group').eq(3).addClass('hidden')
         $('#myModalLabel').text('修改用户');
+        validator.resetForm();
+
         $('#username').attr('disabled',true);
         $('#username').val(dataObj.username);
         $('#cellphone').val(dataObj.cellphone);

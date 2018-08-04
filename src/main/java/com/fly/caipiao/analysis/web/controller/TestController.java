@@ -161,7 +161,7 @@ public class TestController {
     }
 
     /**
-     * 产品IP地址（测试用的）
+     * 产生IP地址（测试用的）
      * @return
      */
     private String getIp(){
@@ -175,7 +175,7 @@ public class TestController {
     }
 
     /**
-     * 产品模拟网址数据（测试用的）
+     * 产生模拟网址数据（测试用的）
      * @return
      */
     private String getHttp(){

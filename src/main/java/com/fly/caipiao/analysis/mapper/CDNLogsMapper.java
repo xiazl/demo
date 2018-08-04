@@ -19,6 +19,7 @@ public interface CDNLogsMapper {
      * @param startRowKey
      * @return
      */
+    @Deprecated
     List<CDNLogEntity> list(@Param("rowKey") String startRowKey);
 
     /**

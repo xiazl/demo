@@ -17,6 +17,7 @@ public interface PhoenixService {
      * @param startRowKey
      * @return
      */
+    @Deprecated
     PageDataResult<HbaseEntity> list(PageBean pageBean, String startRowKey);
 
     /**
