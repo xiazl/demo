@@ -6,7 +6,6 @@ import com.fly.caipiao.analysis.entity.CDNLogEntity;
 import com.fly.caipiao.analysis.entity.LogImportRecord;
 import com.fly.caipiao.analysis.entity.Record;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
-import com.fly.caipiao.analysis.framework.page.ConditionVO;
 import com.fly.caipiao.analysis.mapper.LogImportRecordMapper;
 import com.fly.caipiao.analysis.mapper.RecordMapper;
 import com.fly.caipiao.analysis.service.HbaseService;
@@ -150,7 +149,6 @@ public class ReadDataServiceImpl implements ReadDataService {
      * @param name
      */
     private void saveLogFile(String name){
-        List<LogImportRecord> record = logImportRecordMapper.list(new ConditionVO());
         LogImportRecord logFile = new LogImportRecord();
         logFile.setName(name);
         logFile.setKey(MD5Encrypt.getEncrypt().encode(name));

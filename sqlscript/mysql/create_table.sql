@@ -39,10 +39,11 @@ CREATE TABLE `log_download_record` (
   `name` varchar(120) NOT NULL DEFAULT '' COMMENT '文件名',
   `size` int(11) DEFAULT NULL COMMENT '文件大小',
   `key` varchar(32) NOT NULL COMMENT 'name md5后的值',
-  `log_path` varchar(120) DEFAULT NULL COMMENT '下载路径',
+  `log_path` varchar(250) DEFAULT '' COMMENT '下载路径',
   `status_flag` tinyint(2) DEFAULT '0' COMMENT '状态 0 正常 -1 下载失败',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件下载记录'
 
 -- ----------------------------
@@ -55,7 +56,8 @@ CREATE TABLE `log_import_record` (
   `size` int(11) DEFAULT NULL COMMENT '文件大小',
   `key` varchar(32) NOT NULL COMMENT 'name md5后的值',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志文件分析记录'
 
 -- ----------------------------
@@ -64,11 +66,12 @@ CREATE TABLE `log_import_record` (
 DROP TABLE IF EXISTS `record`;
 CREATE TABLE `record` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `url` varchar(120) DEFAULT NULL COMMENT 'url地址',
+  `url` varchar(600) DEFAULT NULL COMMENT 'url地址',
   `type` tinyint(2) DEFAULT NULL COMMENT '类型 1 资源地址 2 来源平台地址',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广纪录表';
+  PRIMARY KEY (`id`),
+  KEY `idx_prefix_url` (`url`(50)) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推广纪录表'
 
 -- ----------------------------
 --  Table structure for `role`

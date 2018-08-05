@@ -5,7 +5,7 @@ var table = $('#dateLogTable').DataTable(
         "bScrollCollapse" : true,
         "bLengthChange" : true,
         "bFilter" : true,  // 搜索栏
-        "bSort" : false,    // 是否支持排序功能
+        "bSort" : true,    // 是否支持排序功能
         "bInfo" : true,
         "bAutoWidth" : true,
         "bDestroy" : true,
@@ -43,6 +43,7 @@ var table = $('#dateLogTable').DataTable(
                 "sSortAscending" : ": 以升序排列此列",
                 "sSortDescending" : ": 以降序排列此列"
             }
-        }
+        },
+        "order": [[ 1, "desc" ]]
     });
 

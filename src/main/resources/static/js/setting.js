@@ -5,17 +5,17 @@ $().ready(function () {
             domain: {
                 required: true,
                 minlength: 5,
-                maxlength: 15
+                maxlength: 100
             },
             key: {
                 required: true,
                 minlength: 5,
-                maxlength: 15
+                maxlength: 100
             },
             secret: {
                 required: true,
                 minlength: 5,
-                maxlength: 15
+                maxlength: 100
             }
         },
         messages: {
@@ -142,6 +142,8 @@ $().ready(function () {
         $('#myModalLabel').text('添加配置');
         validator.resetForm();
         $("#settingAddForm")[0].reset();
+        $('#domain').attr('disabled',false);
+
     })
 
     $("#addSave").click(function() {

@@ -146,7 +146,7 @@ public class LogFileServiceImpl implements LogFileService {
         PageDataResult<CDNFileVO> result = this.listOnline(pageBean,conditionVO);
         List<CDNFileVO> data = result.getAaData();
         if (result.getiTotalRecords() > 0){
-            this.downloadFileBatch(data);
+            this.downloadFileBatch(removeRepeat(data));
         }
 
         int pages = (int) (result.getiTotalRecords()/PAGE_SIZE + 1);
@@ -158,7 +158,7 @@ public class LogFileServiceImpl implements LogFileService {
 
                 data = result.getAaData();
                 if (result.getiTotalRecords() > 0){
-                    this.downloadFileBatch(data);
+                    this.downloadFileBatch(removeRepeat(data));
                 }
             }
         }
@@ -211,6 +211,23 @@ public class LogFileServiceImpl implements LogFileService {
             }
         }
 
+    }
+
+    /**
+     * 去掉已下载的数据
+     * @param data
+     * @return
+     */
+    private List<CDNFileVO> removeRepeat(List<CDNFileVO> data){
+        Iterator<CDNFileVO> iterator = data.iterator();
+        while (iterator.hasNext()){
+            CDNFileVO fileVO = iterator.next();
+            if (fileVO.getStatus() != 0){
+                iterator.remove();
+            }
+        }
+
+        return data;
     }
 
     /**
