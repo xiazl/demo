@@ -7,6 +7,7 @@ import com.fly.caipiao.analysis.entity.HbaseEntity;
 import com.fly.caipiao.analysis.framework.excepiton.AppException;
 import com.fly.caipiao.analysis.framework.page.PageBean;
 import com.fly.caipiao.analysis.framework.page.PageDataResult;
+import com.fly.caipiao.analysis.mapper.CDNLogsMapper;
 import com.fly.caipiao.analysis.mapper.ErrorRecordMapper;
 import com.fly.caipiao.analysis.service.HbaseService;
 import com.fly.caipiao.analysis.service.MongoWriteService;
@@ -57,6 +58,8 @@ public class HbaseServiceImpl implements HbaseService {
     private Connection hbaseConnection;
     @Autowired
     private ErrorRecordMapper errorRecordMapper;
+    @Autowired
+    private CDNLogsMapper cdnLogsMapper;
 
     @Override
     public PageDataResult<HbaseEntity> list(PageBean pageBean, String lastRowKey) {
@@ -99,6 +102,8 @@ public class HbaseServiceImpl implements HbaseService {
     @Override
     @TimeConsuming("hbase插入")
     public void insertBatch(List<CDNLogEntity> list,List<String> ids,Long timeMillis) {
+
+        System.err.println("==================>"+timeMillis);
         // 创建表，初始化调用一次
 //        this.createTable(TABLE_NAME);
 
@@ -140,30 +145,60 @@ public class HbaseServiceImpl implements HbaseService {
 
     }
 
+    @Override
+    @TimeConsuming("phoenix插入")
+    public void insertBatchByPhoenix(List<CDNLogEntity> list,List<String> ids,Long timeMillis) {
+        System.err.println("==================>"+timeMillis);
+
+        Map<String,String> map = queryTableByIds(ids);
+        Iterator<CDNLogEntity> iterator = list.iterator();
+        while (iterator.hasNext()){
+            CDNLogEntity entity = iterator.next();
+            if (map.containsKey(entity.getId())){
+                iterator.remove();
+            }
+        }
+        try {
+            cdnLogsMapper.batchInsert(list,timeMillis);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new AppException("phoenix插入hbase失败"+e.getMessage());
+        }
+
+    }
+
+
     /**
      * 通过Id查询
      * @param rowKeys
      * @return
      * @throws IOException
      */
-    public Map queryTableByIds(List<String> rowKeys) throws IOException {
-        List<Get> keys = new ArrayList();
-        Table table = hbaseConnection.getTable( TableName.valueOf(TABLE_NAME));
-        for (String key : rowKeys){
-            Get get = new Get(Bytes.toBytes(key));
-            keys.add(get);
+    public Map queryTableByIds(List<String> rowKeys) {
+        Map<String,String> map = new HashMap<>();
+
+        try {
+            List<Get> keys = new ArrayList();
+            Table table = hbaseConnection.getTable( TableName.valueOf(TABLE_NAME));
+            for (String key : rowKeys){
+                Get get = new Get(Bytes.toBytes(key));
+                keys.add(get);
+            }
+
+            Result[] results = table.get(keys);
+            for (Result result : results){
+                if(result.getRow()!=null);
+                {
+                    String row = Bytes.toString(result.getRow());
+                    map.put(row, row);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("通过Id查询失败"+e.getMessage(),e);
         }
 
-        Result[] results = table.get(keys);
-        Map<String,String> map = new HashMap<>();
-        for (Result result : results){
-            if(result.getRow()!=null);
-            {
-                String row = Bytes.toString(result.getRow());
-                map.put(row, row);
-            }
-        }
         return map;
+
     }
 
 

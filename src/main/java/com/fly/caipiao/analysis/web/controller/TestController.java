@@ -2,6 +2,7 @@ package com.fly.caipiao.analysis.web.controller;
 
 import com.fly.caipiao.analysis.configuration.anoutation.TimeConsuming;
 import com.fly.caipiao.analysis.entity.CDNLogEntity;
+import com.fly.caipiao.analysis.framework.excepiton.AppException;
 import com.fly.caipiao.analysis.framework.response.ResponseData;
 import com.fly.caipiao.analysis.framework.response.Result;
 import com.fly.caipiao.analysis.service.HbaseService;
@@ -29,7 +30,7 @@ public class TestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
     private static final Integer LENGTH = 10000000;
-    private static final Integer SIZE = 50000;
+    private static final Integer SIZE = 5000;
     private static String[] dateStringArray;
     private static final Random random = new Random();
 
@@ -99,8 +100,14 @@ public class TestController {
      */
     @ResponseBody
     @RequestMapping("/clear")
-    public Result clear(){
-        testService.clear();
+    public Result clear(Long time){
+        Long timeMillis = System.currentTimeMillis();
+        // 防止误操作
+        if(time!=null && timeMillis - time < 30*1000 ) {
+            testService.clear();
+        } else {
+            throw new AppException("时间过期");
+        }
         return ResponseData.success();
     }
 

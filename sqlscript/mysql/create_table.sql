@@ -154,6 +154,7 @@ CREATE TABLE `error_record` (
 -- ----------------------------
 --  Table structure for `cdn_setting`
 -- ----------------------------
+DROP TABLE IF EXISTS `cdn_setting`;
 CREATE TABLE `cdn_setting` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `domain` varchar(40) DEFAULT NULL COMMENT '域名',
@@ -162,7 +163,14 @@ CREATE TABLE `cdn_setting` (
   `status_flag` tinyint(2) DEFAULT '0' COMMENT '状态 0 正常 1 删除',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='CDN域名配置记录'
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='CDN域名配置记录';
+
+-- ----------------------------
+--  Records of `cdn_setting`
+-- ----------------------------
+BEGIN;
+INSERT INTO `cdn_setting` VALUES ('1', 'down.fcbtq.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-03 20:53:04'), ('2', 'feedback.seekxhb.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:34:12'), ('3', 'www.yunczl.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:35:16'), ('4', 'www.tn830.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:35:38'), ('5', 'down.tn830.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:35:52'), ('6', 'down.aixi360.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:36:02'), ('7', 'www.hoowine.com', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:36:12'), ('8', 'download.30755.net', 'LTAIbzOJzjxBqAuj', 'Aw5faogIc2G400wrGxyylECn1gddmh', '0', '2018-08-05 11:36:31');
+COMMIT;
 
 
 SET FOREIGN_KEY_CHECKS = 1;

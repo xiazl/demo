@@ -57,4 +57,10 @@ public interface CDNLogsMapper {
      */
     List<ResourcePlatformStatistics> aggregationResourcePlatform(@Param("time") Long time);
 
+    /**
+     * 批量插入
+     * @param list
+     * @return
+     */
+    Integer batchInsert(@Param("list") List<CDNLogEntity> list, @Param("time") Long time);
 }

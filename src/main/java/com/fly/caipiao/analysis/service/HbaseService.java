@@ -20,12 +20,18 @@ public interface HbaseService {
      * @param lastRowKey key值
      * @return
      */
+    @Deprecated
     PageDataResult<HbaseEntity> list(PageBean pageBean, String lastRowKey);
 
     /**
      * 批量写入
      */
     void insertBatch(List<CDNLogEntity> list, List<String> ids, Long timeMillis);
+
+    /**
+     * 批量写入
+     */
+    void insertBatchByPhoenix(List<CDNLogEntity> list, List<String> ids, Long timeMillis);
 
     /**
      * 按天统计数据写入mongo

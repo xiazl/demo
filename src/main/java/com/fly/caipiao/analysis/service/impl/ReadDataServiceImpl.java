@@ -83,7 +83,8 @@ public class ReadDataServiceImpl implements ReadDataService {
             while (sc.hasNextLine()) {
                 if (i == BATCH_SIZE) {
 //                    logMongoService.insertBatch(list,ids);
-                    hbaseService.insertBatch(list, ids, timeMillis);
+//                    hbaseService.insertBatch(list, ids, timeMillis);
+                    hbaseService.insertBatchByPhoenix(list, ids, timeMillis);
 
                     i = 0;
                     list = new ArrayList<>();
@@ -125,7 +126,8 @@ public class ReadDataServiceImpl implements ReadDataService {
 
             if (i > 0) {
 //                logMongoService.insertBatch(list,ids);
-                hbaseService.insertBatch(list, ids, timeMillis);
+//                hbaseService.insertBatch(list, ids, timeMillis);
+                hbaseService.insertBatchByPhoenix(list, ids, timeMillis);
 
             }
 
